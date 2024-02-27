@@ -1,0 +1,42 @@
+{
+  "typescript.tsdk": "node_modules/.pnpm/typescript@4.9.4/node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[yaml]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[json]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "cSpell.words": [
+    "wewe",
+    "callout",
+    "checkstyle",
+    "commitlint",
+    "daisyui",
+    "nestjs",
+    "tailwindcss",
+    "Trpc"
+  ]
+}

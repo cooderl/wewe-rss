@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "noImplicitAny": false,
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@server/*": [
+        "./apps/server/src/*"
+      ],
+      "@web/*": [
+        "./apps/web/*"
+      ]
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "stylelint.vscode-stylelint",
+    "streetsidesoftware.code-spell-checker",
+    "DavidAnson.vscode-markdownlint",
+    "Gruntfuggly.todo-tree",
+    "mikestead.dotenv",
+    "foxundermoon.next-js",
+    "Prisma.prisma",
+    "planbcoding.vscode-react-refactor",
+    "yoavbls.pretty-ts-errors",
+    "usernamehw.errorlens"
+  ]
+}

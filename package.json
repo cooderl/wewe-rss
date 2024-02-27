@@ -1,0 +1,22 @@
+{
+  "name": "wewe-rss",
+  "version": "0.0.0",
+  "private": true,
+  "author": "cooderl <cooder@111965.xyz>",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8.6.1",
+    "vscode": ">=1.79"
+  },
+  "scripts": {
+    "dev": "pnpm run --parallel dev",
+    "build:server": "pnpm --filter server build",
+    "build:web": "pnpm --filter web build",
+    "start:server": "pnpm --filter server start:prod",
+    "start:web": "pnpm --filter web start",
+    "fmt": "prettier --write .",
+    "fmt.check": "prettier --check ."
+  }
+}
