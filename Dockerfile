@@ -31,9 +31,7 @@ ENV NODE_ENV=production
 ENV NEXT_PUBLIC_SERVER_ORIGIN_URL="http://localhost:4000"
 ENV NEXT_PUBLIC_ENV=prod
 
-CMD [ "npm", "run", "start" ]
-
-
+CMD ["npm", "run", "start"]
 
 
 FROM base AS server
@@ -50,4 +48,4 @@ ENV MAX_REQUEST_PER_MINUTE=60
 ENV AUTH_CODE=""
 ENV DATABASE_URL=""
 
-CMD [ "npm", "run", "start:migrate:prod" ]
+CMD ["npm", "run", "start:migrate:prod"]

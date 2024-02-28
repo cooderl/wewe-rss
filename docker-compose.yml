@@ -5,17 +5,18 @@ services:
     image: mysql:latest
     command: --default-authentication-plugin=mysql_native_password
     environment:
+      # 请修改为自己的密码
       MYSQL_ROOT_PASSWORD: 123456
       TZ: 'Asia/Shanghai'
     ports:
       - 3306:3306
 
   server:
-    image: cooderl/wewe-rss-server
+    image: cooderl/wewe-rss-server:latest
     ports:
       - 4000:4000
     depends_on:
-      - mysql
+      - db
     environment:
       # 数据库连接地址
       - DATABASE_URL="mysql://root:123456@db:3306/wewe-rss"
@@ -27,7 +28,7 @@ services:
       - SERVER_ORIGIN_URL=http://localhost:4000
 
   web:
-    image: cooderl/wewe-rss-web
+    image: cooderl/wewe-rss-web:latest
     ports:
       - 3000:3000
     environment:
