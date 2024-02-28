@@ -1,4 +1,4 @@
-name: Build WeWeRSS Server images and push image to docker hub
+name: Build WeWeRSS images and push image to docker hub
 on:
   workflow_dispatch:
   push:
@@ -69,7 +69,7 @@ jobs:
   push-web-images-to-docker-hub:
     needs: build-web-images
     runs-on: ubuntu-20.04
-    if: github.repository == 'cooderl/wewe-rss-web'
+    if: github.repository == 'cooderl/wewe-rss'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -148,7 +148,7 @@ jobs:
   push-server-images-to-docker-hub:
     needs: build-server-images
     runs-on: ubuntu-20.04
-    if: github.repository == 'cooderl/wewe-rss-server'
+    if: github.repository == 'cooderl/wewe-rss'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
