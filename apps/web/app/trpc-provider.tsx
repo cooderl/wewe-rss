@@ -14,14 +14,7 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { setAuthCode } from './utils';
 
-const NEXT_PUBLIC_SERVER_ORIGIN_URL = process.env.NEXT_PUBLIC_SERVER_ORIGIN_URL;
-
-if (
-  NEXT_PUBLIC_SERVER_ORIGIN_URL === undefined ||
-  NEXT_PUBLIC_SERVER_ORIGIN_URL === ''
-) {
-  throw new Error('app-err: NEXT_PUBLIC_SERVER_ORIGIN_URL is not defined!');
-}
+const serverOriginUrl = process.env.NEXT_PUBLIC_SERVER_ORIGIN_URL;
 
 export function isTRPCClientError(
   cause: unknown,
@@ -98,7 +91,7 @@ export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
           enabled: () => true,
         }),
         httpBatchLink({
-          url: NEXT_PUBLIC_SERVER_ORIGIN_URL + '/trpc',
+          url: serverOriginUrl + '/trpc',
           async headers() {
             const token = localStorage.getItem('authCode') || '';
 

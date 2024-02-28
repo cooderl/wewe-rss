@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  setup-deps:
+  build-web-images:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -29,11 +29,6 @@ jobs:
         uses: docker/setup-buildx-action@v2
         with:
           driver-opts: network=host
-
-  build-web-images:
-    needs: setup-deps
-    runs-on: ubuntu-20.04
-    steps:
       - name: Cache Docker layers
         uses: actions/cache@v2
         with:
@@ -98,9 +93,21 @@ jobs:
         run: docker push ${{ github.repository_owner }}/wewe-rss-web:${{env.IMAGE_TAG}}
 
   build-server-images:
-    needs: setup-deps
     runs-on: ubuntu-20.04
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Install Dependencies
+        run: |
+          sudo apt update && sudo apt install -y nodejs npm
+      - name: Set up QEMU (optional)
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          driver-opts: network=host
       - name: Cache Docker layers
         uses: actions/cache@v2
         with:
