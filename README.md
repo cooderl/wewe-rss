@@ -72,6 +72,8 @@ services:
     environment:
       # 同 SERVER_ORIGIN_URL
       - NEXT_PUBLIC_SERVER_ORIGIN_URL=http://localhost:4000
+      # 路由前缀，在配置nginx路径时可以使用
+      - BASE_PATH=''
 
 networks:
   wewe-rss:
@@ -104,6 +106,7 @@ docker run -d \
   -p 4000:4000 \
   -e DATABASE_URL='mysql://root:123456@db:3306/wewe-rss?schema=public&connect_timeout=30&pool_timeout=30&socket_timeout=30' \
   -e AUTH_CODE=123567 \
+  -e FEED_MODE=fulltext \ 
   -e MAX_REQUEST_PER_MINUTE=60 \
   -e SERVER_ORIGIN_URL="http://localhost:4000" \
   cooderl/wewe-rss-server:latest
@@ -153,6 +156,8 @@ docker run -d \
 - `NEXT_PUBLIC_SERVER_ORIGIN_URL` （必填项）服务端接口地址，一般跟 `SERVER_ORIGIN_URL` 一致即可。
 
 
+- `BASE_PATH` 路由前缀，在配置nginx路径时可以使用
+- 
 ## 本地开发
 
 
