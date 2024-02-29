@@ -44,6 +44,7 @@ export class FeedsController {
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
   ) {
     const [id, type] = feed.split('.');
+    this.logger.log('getFeed: ', id);
     const { content, mimeType } = await this.feedsService.handleGenerateFeed({
       id,
       type,

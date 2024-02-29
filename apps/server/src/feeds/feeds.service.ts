@@ -196,11 +196,12 @@ export class FeedsService {
     }
 
     const articles = await this.prismaService.article.findMany({
-      where: { id },
+      where: { mpId: id },
       orderBy: { publishTime: 'desc' },
       take: limit,
     });
 
+    this.logger.log('handleGenerateFeed articles: ' + articles.length);
     const feed = await this.renderFeed({ feedInfo, articles, type });
 
     switch (type) {
