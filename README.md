@@ -101,7 +101,7 @@ docker run -d \
   --name server \
   -p 4000:4000 \
   -e DATABASE_URL='mysql://root:123456@db:3306/wewe-rss?schema=public&connect_timeout=30&pool_timeout=30&socket_timeout=30' \
-  -e AUTH_CODE="123567" \
+  -e AUTH_CODE=123567 \
   -e MAX_REQUEST_PER_MINUTE=60 \
   -e SERVER_ORIGIN_URL="http://localhost:4000" \
   cooderl/wewe-rss-server:latest
