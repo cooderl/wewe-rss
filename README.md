@@ -15,7 +15,7 @@
 - [x]  支持订阅微信公众号（基于微信读书）
 - [x]  后台定时更新文章
 - [x]  微信公众号RSS生成
-- [ ]  全文输出
+- [x]  全文输出
 
 
 ## 部署
@@ -58,6 +58,8 @@ services:
       - DATABASE_URL=mysql://root:123456@db:3306/wewe-rss?schema=public&connect_timeout=30&pool_timeout=30&socket_timeout=30
       # 服务接口请求授权码
       - AUTH_CODE=123567
+      # 自动提取全文内容
+      - FEED_MODE=fulltext
       # 服务接口请求限制，每分钟请求次数
       - MAX_REQUEST_PER_MINUTE=60
       # 外网访问时，需设置为服务器的公网 IP 或者域名地址
