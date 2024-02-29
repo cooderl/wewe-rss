@@ -48,4 +48,6 @@ ENV MAX_REQUEST_PER_MINUTE=60
 ENV AUTH_CODE=""
 ENV DATABASE_URL=""
 
-CMD ["npm", "run", "start:migrate:prod"]
+RUN chmod +x ./docker-bootstrap.sh
+
+CMD ["./docker-bootstrap.sh"]

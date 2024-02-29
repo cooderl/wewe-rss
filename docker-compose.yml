@@ -8,8 +8,8 @@ services:
       # 请修改为自己的密码
       MYSQL_ROOT_PASSWORD: 123456
       TZ: 'Asia/Shanghai'
-    ports:
-      - 3306:3306
+    # ports:
+    #   - 3306:3306
 
   server:
     image: cooderl/wewe-rss-server:latest
