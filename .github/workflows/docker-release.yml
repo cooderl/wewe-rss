@@ -80,7 +80,7 @@ jobs:
           tags: ${{ steps.meta-web.outputs.tags }}
           labels: ${{ steps.meta-web.outputs.labels }}
           target: web
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           cache-from: type=gha,scope=docker-release
           cache-to: type=gha,mode=max,scope=docker-release
 
@@ -105,7 +105,7 @@ jobs:
           tags: ${{ steps.meta-server.outputs.tags }}
           labels: ${{ steps.meta-server.outputs.labels }}
           target: server
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           cache-from: type=gha,scope=docker-release
           cache-to: type=gha,mode=max,scope=docker-release
 
