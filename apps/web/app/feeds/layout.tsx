@@ -27,8 +27,6 @@ import { PlusIcon } from '@web/components/PlusIcon';
 import dayjs from 'dayjs';
 import { useParams } from 'next/navigation';
 
-const serverOriginUrl = process.env.NEXT_PUBLIC_SERVER_ORIGIN_URL;
-
 const FeedLayout = ({
   children,
 }: Readonly<{
@@ -206,7 +204,7 @@ const FeedLayout = ({
                   size="sm"
                   showAnchorIcon
                   target="_blank"
-                  href={`${serverOriginUrl}/feeds/${currentMpInfo.id}`}
+                  href={`${process.env.NEXT_PUBLIC_SERVER_ORIGIN_URL}/feeds/${currentMpInfo.id}`}
                   color="foreground"
                 >
                   RSS
@@ -217,7 +215,7 @@ const FeedLayout = ({
                 size="sm"
                 showAnchorIcon
                 target="_blank"
-                href={`${serverOriginUrl}/feeds/all.atom`}
+                href={`${process.env.NEXT_PUBLIC_SERVER_ORIGIN_URL}/feeds/all.atom`}
                 color="foreground"
               >
                 RSS

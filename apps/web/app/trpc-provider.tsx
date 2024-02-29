@@ -14,8 +14,6 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { setAuthCode } from './utils';
 
-const serverOriginUrl = process.env.NEXT_PUBLIC_SERVER_ORIGIN_URL;
-
 export function isTRPCClientError(
   cause: unknown,
 ): cause is TRPCClientError<AppRouter> {
@@ -91,7 +89,7 @@ export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
           enabled: () => true,
         }),
         httpBatchLink({
-          url: serverOriginUrl + '/trpc',
+          url: process.env.NEXT_PUBLIC_SERVER_ORIGIN_URL + '/trpc',
           async headers() {
             const token = localStorage.getItem('authCode') || '';
 
