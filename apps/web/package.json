@@ -18,6 +18,7 @@
     "dayjs": "^1.11.10",
     "framer-motion": "^11.0.5",
     "next": "14.1.0",
+    "next-runtime-env": "^3.2.0",
     "next-themes": "^0.2.1",
     "qrcode.react": "^3.1.0",
     "react": "^18",

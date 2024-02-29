@@ -8,6 +8,7 @@ import Nav from '@web/components/Nav';
 import { useLayoutEffect } from 'react';
 import { getAuthCode } from './utils';
 import { useRouter } from 'next/navigation';
+import { PublicEnvScript } from 'next-runtime-env';
 
 export default function RootLayout({
   children,
@@ -27,6 +28,7 @@ export default function RootLayout({
         <title>WeWe-RSS</title>
         <meta name="description" content="更好的公众号订阅方式" />
         <link rel="icon" href="https://r2-assets.111965.xyz/wewe-rss.png" />
+        <PublicEnvScript />
       </head>
 
       <body>

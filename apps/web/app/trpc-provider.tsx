@@ -12,7 +12,7 @@ import { trpc } from './trpc';
 import { AppRouter } from '@server/trpc/trpc.router';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { setAuthCode } from './utils';
+import { getServerOriginUrl, setAuthCode } from './utils';
 
 const serverOriginUrl = process.env.NEXT_PUBLIC_SERVER_ORIGIN_URL;
 
@@ -91,7 +91,7 @@ export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
           enabled: () => true,
         }),
         httpBatchLink({
-          url: serverOriginUrl + '/trpc',
+          url: getServerOriginUrl() + '/trpc',
           async headers() {
             const token = localStorage.getItem('authCode') || '';
 

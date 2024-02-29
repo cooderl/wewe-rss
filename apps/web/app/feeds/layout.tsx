@@ -26,6 +26,7 @@ import { toast } from 'sonner';
 import { PlusIcon } from '@web/components/PlusIcon';
 import dayjs from 'dayjs';
 import { useParams } from 'next/navigation';
+import { getServerOriginUrl } from '../utils';
 
 const serverOriginUrl = process.env.NEXT_PUBLIC_SERVER_ORIGIN_URL;
 
@@ -206,7 +207,7 @@ const FeedLayout = ({
                   size="sm"
                   showAnchorIcon
                   target="_blank"
-                  href={`${serverOriginUrl}/feeds/${currentMpInfo.id}`}
+                  href={`${getServerOriginUrl()}/feeds/${currentMpInfo.id}`}
                   color="foreground"
                 >
                   RSS
@@ -217,7 +218,7 @@ const FeedLayout = ({
                 size="sm"
                 showAnchorIcon
                 target="_blank"
-                href={`${serverOriginUrl}/feeds/all.atom`}
+                href={`${getServerOriginUrl()}/feeds/all.atom`}
                 color="foreground"
               >
                 RSS
