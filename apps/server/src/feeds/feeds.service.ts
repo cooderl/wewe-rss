@@ -7,16 +7,51 @@ import { ConfigService } from '@nestjs/config';
 import { Article, Feed as FeedInfo } from '@prisma/client';
 import { ConfigurationType } from '@server/configuration';
 import { Feed } from 'feed';
+import got, { Got } from 'got';
+import { load } from 'cheerio';
+import { minify } from 'html-minifier';
+import * as NodeCache from 'node-cache';
+import pMap from '@cjs-exporter/p-map';
+
+const mpCache = new NodeCache({
+  maxKeys: 1000,
+});
 
 @Injectable()
 export class FeedsService {
   private readonly logger = new Logger(this.constructor.name);
 
+  private request: Got;
   constructor(
     private readonly prismaService: PrismaService,
     private readonly trpcService: TrpcService,
     private readonly configService: ConfigService,
-  ) {}
+  ) {
+    this.request = got.extend({
+      retry: {
+        limit: 3,
+        methods: ['GET'],
+      },
+      headers: {
+        accept:
+          'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        'accept-encoding': 'gzip, deflate, br',
+        'accept-language': 'en-US,en;q=0.9',
+        'cache-control': 'max-age=0',
+        'sec-ch-ua':
+          '" Not A;Brand";v="99", "Chromium";v="101", "Google Chrome";v="101"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"macOS"',
+        'sec-fetch-dest': 'document',
+        'sec-fetch-mode': 'navigate',
+        'sec-fetch-site': 'none',
+        'sec-fetch-user': '?1',
+        'upgrade-insecure-requests': '1',
+        'user-agent':
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36',
+      },
+    });
+  }
 
   @Cron('35 5,17 * * *', {
     name: 'updateFeeds',
@@ -38,7 +73,49 @@ export class FeedsService {
     }
   }
 
-  renderFeed({
+  async cleanHtml(source: string) {
+    const $ = load(source, { decodeEntities: false });
+
+    const dirtyHtml = $.html($('.rich_media_content'));
+
+    const html = dirtyHtml
+      .replace(/data-src=/g, 'src=')
+      .replace(/visibility: hidden;/g, '');
+
+    const content =
+      '<style> .rich_media_content {overflow: hidden;color: #222;font-size: 17px;word-wrap: break-word;-webkit-hyphens: auto;-ms-hyphens: auto;hyphens: auto;text-align: justify;position: relative;z-index: 0;}.rich_media_content {font-size: 18px;}</style>' +
+      html;
+
+    const result = minify(content, {
+      removeAttributeQuotes: true,
+      collapseWhitespace: true,
+    });
+
+    return result;
+  }
+
+  async getHtmlByUrl(url: string) {
+    const html = await this.request(url, { responseType: 'text' }).text();
+    const result = await this.cleanHtml(html);
+
+    return result;
+  }
+
+  async tryGetContent(id: string) {
+    let content = mpCache.get(id) as string;
+    if (content) {
+      return content;
+    }
+    const url = `https://mp.weixin.qq.com/s/${id}`;
+    content = await this.getHtmlByUrl(url).catch((e) => {
+      this.logger.error('getHtmlByUrl error:', e);
+      return '';
+    });
+    mpCache.set(id, content);
+    return content;
+  }
+
+  async renderFeed({
     type,
     feedInfo,
     articles,
@@ -47,7 +124,7 @@ export class FeedsService {
     feedInfo: FeedInfo;
     articles: Article[];
   }) {
-    const { originUrl } =
+    const { originUrl, mode } =
       this.configService.get<ConfigurationType['feed']>('feed')!;
 
     const link = `${originUrl}/feeds/${feedInfo.id}.${type}`;
@@ -70,23 +147,31 @@ export class FeedsService {
       objects: `WeWe-RSS`,
     });
 
+    const enableFullText = mode === 'fulltext';
 
-    // TODO add fetch fulltext
-
-    for (const item of articles) {
+    const mapper = async (item) => {
       const { title, id, publishTime, picUrl } = item;
       const link = `https://mp.weixin.qq.com/s/${id}`;
+
       const published = new Date(publishTime * 1e3);
+
+      let description = '';
+      if (enableFullText) {
+        description = await this.tryGetContent(id);
+      }
+
       feed.addItem({
         id,
         title,
         link: link,
         guid: link,
-        description: '',
+        description,
         date: published,
         image: picUrl,
       });
-    }
+    };
+
+    await pMap(articles, mapper, { concurrency: 2 });
 
     return feed;
   }
@@ -116,7 +201,7 @@ export class FeedsService {
       take: limit,
     });
 
-    const feed = this.renderFeed({ feedInfo, articles, type });
+    const feed = await this.renderFeed({ feedInfo, articles, type });
 
     switch (type) {
       case 'rss':
@@ -155,7 +240,7 @@ export class FeedsService {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    const feed = this.renderFeed({ feedInfo, articles, type });
+    const feed = await this.renderFeed({ feedInfo, articles, type });
 
     switch (type) {
       case 'rss':
