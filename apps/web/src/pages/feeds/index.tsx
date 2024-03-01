@@ -19,7 +19,7 @@ import {
 import { PlusIcon } from '@web/components/PlusIcon';
 import { trpc } from '@web/utils/trpc';
 import { useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import dayjs from 'dayjs';
 import { serverOriginUrl } from '@web/utils/env';
@@ -29,7 +29,7 @@ const Feeds = () => {
   const { id } = useParams();
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const { refetch: refetchFeed, data: feedData } = trpc.feed.list.useQuery(
+  const { refetch: refetchFeedList, data: feedData } = trpc.feed.list.useQuery(
     {
       limit: 100,
     },
@@ -37,6 +37,8 @@ const Feeds = () => {
       refetchOnWindowFocus: true,
     },
   );
+
+  const navigate = useNavigate();
 
   const queryUtils = trpc.useUtils();
 
@@ -48,6 +50,9 @@ const Feeds = () => {
     trpc.feed.add.useMutation({});
   const { mutateAsync: refreshMpArticles, isLoading: isGetArticlesLoading } =
     trpc.feed.refreshArticles.useMutation();
+
+  const { mutateAsync: deleteFeed, isLoading: isDeleteFeedLoading } =
+    trpc.feed.delete.useMutation({});
 
   const [wxsLink, setWxsLink] = useState('');
 
@@ -71,7 +76,7 @@ const Feeds = () => {
       toast.success('添加成功', {
         description: `公众号 ${item.name}`,
       });
-      refetchFeed();
+      refetchFeedList();
       setWxsLink('');
       onClose();
       await queryUtils.article.list.reset();
@@ -171,7 +176,7 @@ const Feeds = () => {
                       ev.stopPropagation();
                       await Promise.all([
                         refreshMpArticles(currentMpInfo.id),
-                        refetchFeed(),
+                        refetchFeedList(),
                       ]);
 
                       await queryUtils.article.list.reset();
@@ -194,12 +199,34 @@ const Feeds = () => {
                           },
                         });
 
-                        await refetchFeed();
+                        await refetchFeedList();
                       }}
                       isSelected={currentMpInfo?.status === 1}
                     ></Switch>
                   </div>
                 </Tooltip>
+                <Divider orientation="vertical" />
+                <Tooltip content="仅删除订阅源，已获取的文章不会被删除">
+                  <Link
+                    href="#"
+                    color="danger"
+                    size="sm"
+                    isDisabled={isDeleteFeedLoading}
+                    onClick={async (ev) => {
+                      ev.preventDefault();
+                      ev.stopPropagation();
+
+                      if (window.confirm('确定删除吗？')) {
+                        await deleteFeed(currentMpInfo.id);
+                        navigate('/feeds');
+                        await refetchFeedList();
+                      }
+                    }}
+                  >
+                    删除
+                  </Link>
+                </Tooltip>
+
                 <Divider orientation="vertical" />
                 <Tooltip content={<div>可添加.atom/.rss/.json格式输出</div>}>
                   <Link
