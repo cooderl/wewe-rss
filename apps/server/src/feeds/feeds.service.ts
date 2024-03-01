@@ -171,7 +171,7 @@ export class FeedsService {
       });
     };
 
-    await pMap(articles, mapper, { concurrency: 2 });
+    await pMap(articles, mapper, { concurrency: 2, stopOnError: false });
 
     return feed;
   }
