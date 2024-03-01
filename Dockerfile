@@ -12,32 +12,16 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 RUN pnpm run -r build
 
-RUN pnpm deploy --filter=web --prod /app/web
+RUN pnpm deploy --filter=server --prod /app
 
-RUN pnpm deploy --filter=server --prod /app/server
-RUN cd /app/server && pnpm exec prisma generate
-
+RUN cd /app && pnpm exec prisma generate
 
 
 
-FROM base AS web
-COPY --from=build /app/web /app/web
+FROM base AS app
+COPY --from=build /app /app
 
-WORKDIR /app/web
-
-EXPOSE 3000
-
-ENV NODE_ENV=production
-ENV NEXT_PUBLIC_SERVER_ORIGIN_URL="http://localhost:4000"
-ENV NEXT_PUBLIC_ENV=prod
-
-CMD ["npm", "run", "start"]
-
-
-FROM base AS server
-COPY --from=build /app/server /app/server
-
-WORKDIR /app/server
+WORKDIR /app
 
 EXPOSE 4000
 
