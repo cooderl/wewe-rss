@@ -58,6 +58,9 @@ importers:
       got:
         specifier: 11.8.6
         version: 11.8.6
+      hbs:
+        specifier: ^4.2.0
+        version: 4.2.0
       html-minifier:
         specifier: ^4.0.0
         version: 4.0.0
@@ -6105,6 +6108,10 @@ packages:
         optional: true
     dev: false
 
+  /foreachasync@3.0.0:
+    resolution: {integrity: sha512-J+ler7Ta54FwwNcx6wQRDhTIbNeyDcARMkOcguEqnEdtm0jKvN3Li3PDAb2Du3ubJYEWfYL83XMROXdsXAXycw==}
+    dev: false
+
   /foreground-child@3.1.1:
     resolution: {integrity: sha512-TMKDUnIte6bfb5nWv7V/caI169OHgvwjb7V4WkeUvbQQdjr5rWKqHFiKWb/fcOwB+CzBT+qbWjvj+DVwRskpIg==}
     engines: {node: '>=14'}
@@ -6350,6 +6357,19 @@ packages:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
     dev: true
 
+  /handlebars@4.7.7:
+    resolution: {integrity: sha512-aAcXm5OAfE/8IXkcZvCepKU3VzW1/39Fb5ZuqMtgI/hT8X2YgoMvBY5dLhq/cpOvw7Lk1nK/UF71aLG/ZnVYRA==}
+    engines: {node: '>=0.4.7'}
+    hasBin: true
+    dependencies:
+      minimist: 1.2.8
+      neo-async: 2.6.2
+      source-map: 0.6.1
+      wordwrap: 1.0.0
+    optionalDependencies:
+      uglify-js: 3.17.4
+    dev: false
+
   /has-flag@3.0.0:
     resolution: {integrity: sha512-sKJf1+ceQBr4SMkvQnBDNDtf4TXpVhVGateu0t918bl30FnbE2m4vNLX+VWe/dpjlb+HugGYzW7uQXH98HPEYw==}
     engines: {node: '>=4'}
@@ -6381,6 +6401,14 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       function-bind: 1.1.2
+
+  /hbs@4.2.0:
+    resolution: {integrity: sha512-dQwHnrfWlTk5PvG9+a45GYpg0VpX47ryKF8dULVd6DtwOE6TEcYQXQ5QM6nyOx/h7v3bvEQbdn19EDAcfUAgZg==}
+    engines: {node: '>= 0.8', npm: 1.2.8000 || >= 1.4.16}
+    dependencies:
+      handlebars: 4.7.7
+      walk: 2.3.15
+    dev: false
 
   /he@1.2.0:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
@@ -7524,7 +7552,6 @@ packages:
 
   /neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
-    dev: true
 
   /next-themes@0.2.1(next@14.1.0)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-B+AKNfYNIzh0vqQQKqQItTS8evEouKD7H5Hj3kmuPERwddR2TxvDSFZuTj6T7Jfn1oyeUyJMydPl1Bkxkh0W7A==}
@@ -9256,6 +9283,12 @@ packages:
       fsevents: 2.3.3
     dev: true
 
+  /walk@2.3.15:
+    resolution: {integrity: sha512-4eRTBZljBfIISK1Vnt69Gvr2w/wc3U6Vtrw7qiN5iqYJPH7LElcYh/iU4XWhdCy2dZqv1ToMyYlybDylfG/5Vg==}
+    dependencies:
+      foreachasync: 3.0.0
+    dev: false
+
   /walker@1.0.8:
     resolution: {integrity: sha512-ts/8E8l5b7kY0vlWLewOkDXMmPdLcVV4GmOQLyxuSswIJsweeFZtAsMF7k1Nszz+TYBQrlYRmzOnr398y1JemQ==}
     dependencies:
@@ -9381,6 +9414,10 @@ packages:
     hasBin: true
     dependencies:
       isexe: 2.0.0
+
+  /wordwrap@1.0.0:
+    resolution: {integrity: sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==}
+    dev: false
 
   /wrap-ansi@6.2.0:
     resolution: {integrity: sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==}

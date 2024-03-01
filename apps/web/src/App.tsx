@@ -8,7 +8,7 @@ import ThemeProvider from './provider/theme';
 
 function App() {
   return (
-    <BrowserRouter basename="">
+    <BrowserRouter basename="/dash">
       <ThemeProvider>
         <TrpcProvider>
           <Routes>

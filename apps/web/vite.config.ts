@@ -6,7 +6,18 @@ const projectRootDir = resolve(__dirname);
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  base: '/dash',
+  plugins: [
+    react(),
+    {
+      name: 'renameIndex',
+      enforce: 'post',
+      generateBundle(options, bundle) {
+        const indexHtml = bundle['index.html'];
+        indexHtml.fileName = 'index.hbs';
+      },
+    },
+  ],
   resolve: {
     alias: [
       {
@@ -18,5 +29,9 @@ export default defineConfig({
         replacement: resolve(projectRootDir, './src'),
       },
     ],
+  },
+  build: {
+    emptyOutDir: true,
+    outDir: resolve(projectRootDir, '..', 'server', 'client'),
   },
 });
