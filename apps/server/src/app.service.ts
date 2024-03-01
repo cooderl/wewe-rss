@@ -6,7 +6,11 @@ import { ConfigurationType } from './configuration';
 export class AppService {
   constructor(private readonly configService: ConfigService) {}
   getHello(): string {
-    return 'Hello World!';
+    return `
+    <div style="display:flex;justify-content: center;height: 100%;align-items: center;font-size: 30px;">
+    <div>>> <a href="/dash">WeWe RSS</a> <<</div>
+    </div>
+    `;
   }
 
   getFeedConfig() {
