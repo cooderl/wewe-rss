@@ -4,7 +4,7 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl"] // 生成linux可执行文件
 }
 
@@ -23,19 +23,19 @@ model Account {
 
 // 订阅源
 model Feed {
-  id       String @id @db.VarChar(255)
-  mpName   String @map("mp_name") @db.VarChar(512)
-  mpCover  String @map("mp_cover") @db.VarChar(1024)
-  mpIntro  String @map("mp_intro") @db.Text()
+  id      String @id @db.VarChar(255)
+  mpName  String @map("mp_name") @db.VarChar(512)
+  mpCover String @map("mp_cover") @db.VarChar(1024)
+  mpIntro String @map("mp_intro") @db.Text()
   // 状态 0:失效 1:启用 2:禁用
-  status   Int    @default(1) @map("status") @db.Int()
+  status  Int    @default(1) @map("status") @db.Int()
 
   // article最后同步时间
-  syncTime Int    @map("sync_time") @default(0)
+  syncTime Int @default(0) @map("sync_time")
 
   // 信息更新时间
-  updateTime Int  @map("update_time")
-  
+  updateTime Int @map("update_time")
+
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
 
