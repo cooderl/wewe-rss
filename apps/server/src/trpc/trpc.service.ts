@@ -45,6 +45,8 @@ export class TrpcService {
             where: { id: (error.config.headers as any).xid },
             data: { status: statusMap.INVALID },
           });
+        } else if (errMsg.includes('WeReadError400')) {
+          // TODO 处理请求参数出错，可能是账号被限制导致的
         } else if (errMsg.includes('WeReadError429')) {
           //TODO 处理请求频繁
         }
