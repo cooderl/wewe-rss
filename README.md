@@ -58,8 +58,8 @@ services:
       - DATABASE_URL=mysql://root:123456@db:3306/wewe-rss?schema=public&connect_timeout=30&pool_timeout=30&socket_timeout=30
       # 服务接口请求授权码
       - AUTH_CODE=123567
-      # 自动提取全文内容
-      - FEED_MODE=fulltext
+      # 提取全文内容模式
+      # - FEED_MODE=fulltext
       # 服务接口请求限制，每分钟请求次数
       - MAX_REQUEST_PER_MINUTE=60
       # 外网访问时，需设置为服务器的公网 IP 或者域名地址
@@ -151,13 +151,16 @@ docker run -d \
 
 - `MAX_REQUEST_PER_MINUTE`每分钟最大请求次数，默认 60。
 
+- `FEED_MODE` 输出模式，可选值 `fulltext`，RSS接口会变慢，占用更多内存。
+
 ### Web前端
 
 - `NEXT_PUBLIC_SERVER_ORIGIN_URL` （必填项）服务端接口地址，一般跟 `SERVER_ORIGIN_URL` 一致即可。
 
 
 - `BASE_PATH` 路由前缀，在配置nginx路径时可以使用
-- 
+
+
 ## 本地开发
 
 
