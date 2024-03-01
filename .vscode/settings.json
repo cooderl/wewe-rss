@@ -30,13 +30,14 @@
     "editor.defaultFormatter": "vscode.json-language-features"
   },
   "cSpell.words": [
-    "wewe",
     "callout",
     "checkstyle",
     "commitlint",
     "daisyui",
     "nestjs",
+    "nextui",
     "tailwindcss",
-    "Trpc"
+    "Trpc",
+    "wewe"
   ]
 }
