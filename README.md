@@ -85,7 +85,13 @@ volumes:
 
 ### Docker 命令启动
 
-1. 启动 MySQL 数据库
+1. 创建docker网络
+
+```sh
+docker network create wewe-rss
+```
+
+2. 启动 MySQL 数据库
 
 ```sh
 docker run -d \
@@ -94,11 +100,12 @@ docker run -d \
   -e TZ='Asia/Shanghai' \
   -e MYSQL_DATABASE='wewe-rss' \
   -v db_data:/var/lib/mysql \
+  --network wewe-rss \
   mysql:latest --default-authentication-plugin=mysql_native_password
 
 ```
 
-2. 启动 Server
+3. 启动 Server
 
 ```sh
 docker run -d \
@@ -106,23 +113,26 @@ docker run -d \
   -p 4000:4000 \
   -e DATABASE_URL='mysql://root:123456@db:3306/wewe-rss?schema=public&connect_timeout=30&pool_timeout=30&socket_timeout=30' \
   -e AUTH_CODE=123567 \
-  -e FEED_MODE=fulltext \ 
+  -e FEED_MODE=fulltext \
   -e MAX_REQUEST_PER_MINUTE=60 \
   -e SERVER_ORIGIN_URL="http://localhost:4000" \
+  --network wewe-rss \
   cooderl/wewe-rss-server:latest
 
 ```
 
-3. 启动 Web
+4. 启动 Web
 
 ```sh
 docker run -d \
   --name web \
   -p 3000:3000 \
   -e NEXT_PUBLIC_SERVER_ORIGIN_URL="http://localhost:4000" \
+  --network wewe-rss \
   cooderl/wewe-rss-web:latest
-
 ```
+
+外网访问时，需将`NEXT_PUBLIC_SERVER_ORIGIN_URL`和`NEXT_PUBLIC_SERVER_ORIGIN_URL`设置为服务器的公网 IP 或者域名地址
 
 ### 本地部署
 
