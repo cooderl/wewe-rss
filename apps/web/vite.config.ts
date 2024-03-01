@@ -4,19 +4,25 @@ import { resolve } from 'path';
 
 const projectRootDir = resolve(__dirname);
 
+const isProd = process.env.NODE_ENV === 'production';
+
+console.log('process.env.NODE_ENV: ', process.env.NODE_ENV);
+
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '/dash',
   plugins: [
     react(),
-    {
-      name: 'renameIndex',
-      enforce: 'post',
-      generateBundle(options, bundle) {
-        const indexHtml = bundle['index.html'];
-        indexHtml.fileName = 'index.hbs';
-      },
-    },
+    !isProd
+      ? null
+      : {
+          name: 'renameIndex',
+          enforce: 'post',
+          generateBundle(options, bundle) {
+            const indexHtml = bundle['index.html'];
+            indexHtml.fileName = 'index.hbs';
+          },
+        },
   ],
   resolve: {
     alias: [
