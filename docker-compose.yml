@@ -20,7 +20,7 @@ services:
       retries: 10
 
   server:
-    image: cooderl/wewe-rss-server:latest
+    image: cooderl/wewe-rss:latest
     ports:
       - 4000:4000
     depends_on:
@@ -31,22 +31,12 @@ services:
       - DATABASE_URL=mysql://root:123456@db:3306/wewe-rss?schema=public&connect_timeout=30&pool_timeout=30&socket_timeout=30
       # 服务接口请求授权码
       - AUTH_CODE=123567
-      # 自动提取全文内容
-      - FEED_MODE=fulltext
+      # 提取全文内容模式
+      # - FEED_MODE=fulltext
       # 服务接口请求限制，每分钟请求次数
       - MAX_REQUEST_PER_MINUTE=60
       # 外网访问时，需设置为服务器的公网 IP 或者域名地址
       - SERVER_ORIGIN_URL=http://localhost:4000
-
-  web:
-    image: cooderl/wewe-rss-web:latest
-    ports:
-      - 3000:3000
-    environment:
-      # 同 SERVER_ORIGIN_URL
-      - NEXT_PUBLIC_SERVER_ORIGIN_URL=http://localhost:4000
-      # 路由前缀，在配置nginx路由时可以使用
-      - BASE_PATH=''
 
 networks:
   wewe-rss:
