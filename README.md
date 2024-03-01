@@ -47,7 +47,7 @@ services:
       retries: 10
 
   server:
-    image: cooderl/wewe-rss-server:latest
+    image: cooderl/wewe-rss:latest
     ports:
       - 4000:4000
     depends_on:
@@ -64,16 +64,6 @@ services:
       - MAX_REQUEST_PER_MINUTE=60
       # 外网访问时，需设置为服务器的公网 IP 或者域名地址
       - SERVER_ORIGIN_URL=http://localhost:4000
-
-  web:
-    image: cooderl/wewe-rss-web:latest
-    ports:
-      - 3000:3000
-    environment:
-      # 同 SERVER_ORIGIN_URL
-      - NEXT_PUBLIC_SERVER_ORIGIN_URL=http://localhost:4000
-      # 路由前缀，在配置nginx路径时可以使用
-      - BASE_PATH=''
 
 networks:
   wewe-rss:
@@ -102,7 +92,6 @@ docker run -d \
   -v db_data:/var/lib/mysql \
   --network wewe-rss \
   mysql:latest --default-authentication-plugin=mysql_native_password
-
 ```
 
 3. 启动 Server
@@ -117,22 +106,12 @@ docker run -d \
   -e MAX_REQUEST_PER_MINUTE=60 \
   -e SERVER_ORIGIN_URL="http://localhost:4000" \
   --network wewe-rss \
-  cooderl/wewe-rss-server:latest
+  cooderl/wewe-rss:latest
 
 ```
 
-4. 启动 Web
+外网访问时，需将`SERVER_ORIGIN_URL`设置为服务器的公网 IP 或者域名地址
 
-```sh
-docker run -d \
-  --name web \
-  -p 3000:3000 \
-  -e NEXT_PUBLIC_SERVER_ORIGIN_URL="http://localhost:4000" \
-  --network wewe-rss \
-  cooderl/wewe-rss-web:latest
-```
-
-外网访问时，需将`NEXT_PUBLIC_SERVER_ORIGIN_URL`和`NEXT_PUBLIC_SERVER_ORIGIN_URL`设置为服务器的公网 IP 或者域名地址
 
 ### 本地部署
 
@@ -150,7 +129,6 @@ docker run -d \
 
 ## 环境变量
 
-### Server服务端
 
 - `DATABASE_URL` （必填项）Mysql 数据库地址，例如 `mysql://root:123456@127.0.0.1:3306/wewe-rss`。
 
@@ -161,14 +139,7 @@ docker run -d \
 
 - `MAX_REQUEST_PER_MINUTE`每分钟最大请求次数，默认 60。
 
-- `FEED_MODE` 输出模式，可选值 `fulltext`，RSS接口会变慢，占用更多内存。
-
-### Web前端
-
-- `NEXT_PUBLIC_SERVER_ORIGIN_URL` （必填项）服务端接口地址，一般跟 `SERVER_ORIGIN_URL` 一致即可。
-
-
-- `BASE_PATH` 路由前缀，在配置nginx路径时可以使用
+- `FEED_MODE` 输出模式，可选值 `fulltext`（RSS接口会变慢，占用更多内存）。
 
 
 ## 本地开发
