@@ -3,7 +3,7 @@
 
 <h1 align="center">WeWe RSS</h1>
 
-免费、开源的微信公众号订阅方式。
+更优雅的微信公众号订阅方式。
 
 
 ![主界面](https://raw.githubusercontent.com/cooderl/wewe-rss/main/assets/preview1.png)
@@ -148,3 +148,8 @@ docker run -d \
 1. 安装 nodejs 18 和 pnpm；
 2. 修改环境变量`cp ./apps/web/.env.local.example ./apps/web/.env`和`cp ./apps/server/.env.local.example ./apps/server/.env`
 3. 执行 `pnpm install && pnpm dev` 即可。⚠️ 注意：此命令仅用于本地开发，不要用于部署！
+
+
+## 风险声明
+
+为了确保本项目的持续运行，某些接口请求将通过`weread.111965.xyz`进行转发。请放心，该转发服务不会保存任何数据。
