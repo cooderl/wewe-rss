@@ -174,11 +174,8 @@ const Feeds = () => {
                     onClick={async (ev) => {
                       ev.preventDefault();
                       ev.stopPropagation();
-                      await Promise.all([
-                        refreshMpArticles(currentMpInfo.id),
-                        refetchFeedList(),
-                      ]);
-
+                      await refreshMpArticles(currentMpInfo.id);
+                      await refetchFeedList();
                       await queryUtils.article.list.reset();
                     }}
                   >
