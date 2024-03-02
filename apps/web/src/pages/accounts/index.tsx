@@ -12,6 +12,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  Chip,
 } from '@nextui-org/react';
 import { QRCodeSVG } from 'qrcode.react';
 import { toast } from 'sonner';
@@ -19,6 +20,7 @@ import { PlusIcon } from '@web/components/PlusIcon';
 import dayjs from 'dayjs';
 import { StatusDropdown } from '@web/components/StatusDropdown';
 import { trpc } from '@web/utils/trpc';
+import { statusMap } from '@web/constants';
 
 const AccountPage = () => {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
@@ -97,11 +99,32 @@ const AccountPage = () => {
           loadingContent={<Spinner />}
         >
           {data?.items.map((item) => {
+            const isBlocked = data?.blocks.includes(item.id);
+
             return (
               <TableRow key={item.id}>
                 <TableCell>{item.id}</TableCell>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>
+                  {isBlocked ? (
+                    <Chip className="capitalize" size="sm" variant="flat">
+                      今日小黑屋
+                    </Chip>
+                  ) : (
+                    <Chip
+                      className="capitalize"
+                      color={statusMap[item.status].color}
+                      size="sm"
+                      variant="flat"
+                    >
+                      {statusMap[item.status].label}
+                    </Chip>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {dayjs(item.updatedAt).format('YYYY-MM-DD')}
+                </TableCell>
+                <TableCell className="flex gap-2">
                   <StatusDropdown
                     value={item.status}
                     onChange={(value) => {
@@ -114,11 +137,7 @@ const AccountPage = () => {
                       });
                     }}
                   ></StatusDropdown>
-                </TableCell>
-                <TableCell>
-                  {dayjs(item.updatedAt).format('YYYY-MM-DD')}
-                </TableCell>
-                <TableCell>
+
                   <Button
                     size="sm"
                     color="danger"

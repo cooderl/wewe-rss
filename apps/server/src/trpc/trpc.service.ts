@@ -91,16 +91,20 @@ export class TrpcService {
     return dayjs.tz(new Date(), 'Asia/Shanghai').format('YYYY-MM-DD');
   }
 
-  private async getAvailableAccount() {
+  getBlockedAccountIds() {
     const today = this.getTodayDate();
     const disabledAccounts = blockedAccountsMap.get(today) || [];
     this.logger.debug('disabledAccounts: ', disabledAccounts);
+    return disabledAccounts.filter(Boolean);
+  }
 
+  private async getAvailableAccount() {
+    const disabledAccounts = this.getBlockedAccountIds();
     const account = await this.prismaService.account.findFirst({
       where: {
         status: statusMap.ENABLE,
         NOT: {
-          id: { in: disabledAccounts.filter(Boolean) },
+          id: { in: disabledAccounts },
         },
       },
     });

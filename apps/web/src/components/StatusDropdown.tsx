@@ -6,12 +6,7 @@ import {
   DropdownItem,
   Button,
 } from '@nextui-org/react';
-
-const statusMap = {
-  0: '失效',
-  1: '启用',
-  2: '禁用',
-};
+import { statusMap } from '@web/constants';
 
 export function StatusDropdown({
   value = 1,
@@ -24,7 +19,7 @@ export function StatusDropdown({
     <Dropdown>
       <DropdownTrigger>
         <Button size="sm" variant="bordered" className="capitalize">
-          {statusMap[value]}
+          {statusMap[value].label}
         </Button>
       </DropdownTrigger>
       <DropdownMenu
@@ -38,10 +33,10 @@ export function StatusDropdown({
           onChange(+Array.from(keys)[0]);
         }}
       >
-        {Object.entries(statusMap).map(([value, label]) => {
+        {Object.entries(statusMap).map(([key, value]) => {
           return (
-            <DropdownItem key={`${value}`} value={`${value}`}>
-              {label}
+            <DropdownItem color={value.color} key={`${key}`} value={`${key}`}>
+              {value.label}
             </DropdownItem>
           );
         })}

@@ -51,7 +51,9 @@ export class TrpcRouter {
           nextCursor = nextItem.id;
         }
 
+        const disabledAccounts = this.trpcService.getBlockedAccountIds();
         return {
+          blocks: disabledAccounts,
           items,
           nextCursor,
         };
