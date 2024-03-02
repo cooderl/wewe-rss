@@ -12,15 +12,15 @@
 ## 功能
 
 - [x]  支持微信公众号订阅（基于微信读书）
-- [x]  后台定时更新
+- [x]  后台自动定时更新内容
 - [x]  微信公众号RSS生成（支持`.atom`\.`rss`\.`json`格式)
-- [x]  全文内容输出
+- [x]  支持全文内容输出，让阅读无障碍
 
 ## 部署
 
 ### 一键部署（待完善添加模板）
 
-请前往平台，填写本仓库URL进行部署。
+你可以通过以下平台一键部署，只需填写本项目的URL即可。
 
 [Zeabur](https://zeabur.com/)
 
@@ -28,9 +28,7 @@
 
 ### Docker Compose 部署
 
-[docker-compose.yml](https://github.com/cooderl/wewe-rss/blob/main/docker-compose.yml)
-
-[docker-compose.sqlite.yml](https://github.com/cooderl/wewe-rss/blob/main/docker-compose.sqlite.yml)
+可参考 [docker-compose.yml](https://github.com/cooderl/wewe-rss/blob/main/docker-compose.yml) 和 [docker-compose.sqlite.yml](https://github.com/cooderl/wewe-rss/blob/main/docker-compose.sqlite.yml)
 
 ### Docker 命令启动
 
@@ -104,15 +102,19 @@ docker run -d \
 
 ## 环境变量
 
-- `DATABASE_URL` （必填项）Mysql 数据库地址，例如 `mysql://root:123456@127.0.0.1:3306/wewe-rss`。
+- `DATABASE_URL` （必填项）数据库地址，例如 `mysql://root:123456@127.0.0.1:3306/wewe-rss`。
+
+- `DATABASE_TYPE` 数据库类型，使用 `sqlite` 需要填写 `sqlite`。
 
 - `AUTH_CODE` （必填项）服务端接口请求授权码，(`/feeds`路径不需要)。
 
 - `SERVER_ORIGIN_URL` （必填项）服务端访问地址，用于RSS生成时使用。
 
-- `MAX_REQUEST_PER_MINUTE`每分钟最大请求次数，默认 60。
+- `MAX_REQUEST_PER_MINUTE` 每分钟最大请求次数，默认 60。
 
-- `FEED_MODE` 输出模式，可选值 `fulltext`（RSS生成接口响应会变慢，占用更多内存）。
+- `FEED_MODE` 输出模式，可选值 `fulltext`（RSS全文模式会使接口响应会变慢，占用更多内存）。
+
+- `CRON_EXPRESSION` 定时更新订阅源Cron表达式，默认为 `35 5,17 * * *`。
 
 ## 本地开发
 
