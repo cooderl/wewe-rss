@@ -13,6 +13,8 @@ import { minify } from 'html-minifier';
 import NodeCache from 'node-cache';
 import pMap from '@cjs-exporter/p-map';
 
+console.log('CRON_EXPRESSION: ', process.env.CRON_EXPRESSION);
+
 const mpCache = new NodeCache({
   maxKeys: 1000,
 });
@@ -53,7 +55,7 @@ export class FeedsService {
     });
   }
 
-  @Cron('35 5,17 * * *', {
+  @Cron(process.env.CRON_EXPRESSION || '35 5,17 * * *', {
     name: 'updateFeeds',
     timeZone: 'Asia/Shanghai',
   })

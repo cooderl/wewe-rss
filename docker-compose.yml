@@ -33,6 +33,8 @@ services:
       - AUTH_CODE=123567
       # 提取全文内容模式
       # - FEED_MODE=fulltext
+      # 定时更新订阅源Cron表达式
+      - CRON_EXPRESSION="35 5,17 * * *"
       # 服务接口请求限制，每分钟请求次数
       - MAX_REQUEST_PER_MINUTE=60
       # 外网访问时，需设置为服务器的公网 IP 或者域名地址
