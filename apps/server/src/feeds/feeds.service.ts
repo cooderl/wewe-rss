@@ -183,66 +183,50 @@ export class FeedsService {
     type,
     limit,
   }: {
-    id: string;
+    id?: string;
     type: string;
     limit: number;
   }) {
-    const feedInfo = await this.prismaService.feed.findFirst({ where: { id } });
-
-    if (!feedInfo) {
-      throw new HttpException('不存在该feed！', HttpStatus.BAD_REQUEST);
-    }
-
     if (!feedTypes.includes(type as any)) {
       type = 'atom';
     }
 
-    const articles = await this.prismaService.article.findMany({
-      where: { mpId: id },
-      orderBy: { publishTime: 'desc' },
-      take: limit,
-    });
+    let articles: Article[];
+    let feedInfo: FeedInfo;
+    if (id) {
+      feedInfo = (await this.prismaService.feed.findFirst({
+        where: { id },
+      }))!;
+
+      if (!feedInfo) {
+        throw new HttpException('不存在该feed！', HttpStatus.BAD_REQUEST);
+      }
+
+      articles = await this.prismaService.article.findMany({
+        where: { mpId: id },
+        orderBy: { publishTime: 'desc' },
+        take: limit,
+      });
+    } else {
+      articles = await this.prismaService.article.findMany({
+        orderBy: { publishTime: 'desc' },
+        take: limit,
+      });
+
+      feedInfo = {
+        id: 'all',
+        mpName: 'WeWe-RSS 全部文章',
+        mpIntro: 'WeWe-RSS',
+        mpCover: 'https://r2-assets.111965.xyz/wewe-rss.png',
+        status: 1,
+        syncTime: 0,
+        updateTime: Math.floor(Date.now() / 1e3),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+    }
 
     this.logger.log('handleGenerateFeed articles: ' + articles.length);
-    const feed = await this.renderFeed({ feedInfo, articles, type });
-
-    switch (type) {
-      case 'rss':
-        return { content: feed.rss2(), mimeType: feedMimeTypeMap[type] };
-      case 'json':
-        return { content: feed.json1(), mimeType: feedMimeTypeMap[type] };
-      case 'atom':
-      default:
-        return { content: feed.atom1(), mimeType: feedMimeTypeMap[type] };
-    }
-  }
-  async handleGenerateAllFeed({
-    type,
-    limit,
-  }: {
-    type: string;
-    limit: number;
-  }) {
-    if (!feedTypes.includes(type as any)) {
-      type = 'atom';
-    }
-
-    const articles = await this.prismaService.article.findMany({
-      orderBy: { publishTime: 'desc' },
-      take: limit,
-    });
-
-    const feedInfo: FeedInfo = {
-      id: 'all',
-      mpName: 'WeWe-RSS',
-      mpIntro: 'WeWe-RSS',
-      mpCover: 'https://r2-assets.111965.xyz/wewe-rss.png',
-      status: 1,
-      syncTime: 0,
-      updateTime: Math.floor(Date.now() / 1e3),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
     const feed = await this.renderFeed({ feedInfo, articles, type });
 
     switch (type) {

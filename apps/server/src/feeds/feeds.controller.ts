@@ -26,12 +26,10 @@ export class FeedsController {
   ) {
     const path = req.path;
     const type = path.split('.').pop() || '';
-    const { content, mimeType } = await this.feedsService.handleGenerateAllFeed(
-      {
-        type,
-        limit,
-      },
-    );
+    const { content, mimeType } = await this.feedsService.handleGenerateFeed({
+      type,
+      limit,
+    });
 
     res.setHeader('Content-Type', mimeType);
     res.send(content);
