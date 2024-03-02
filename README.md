@@ -18,7 +18,7 @@
 
 ## 部署
 
-### 一键部署（待完善）
+### 一键部署（待完善添加模板）
 
 [Zeabur](https://zeabur.com/)
 
@@ -72,7 +72,7 @@ docker run -d \
 
 ### 本地部署
 
-如果你想本地部署，请使用 `pnpm install &&  pnpm run -r build && pnpm run -r start` 命令(可以配合 pm2 来守护进程，防止被杀死)。
+如果你想本地部署，请使用 `pnpm install &&  pnpm run -r build && pnpm run start:server` 命令(可以配合 pm2 来守护进程，防止被杀死)。
 
 ## 使用方式
 
