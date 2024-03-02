@@ -100,7 +100,7 @@ export class TrpcService {
       where: {
         status: statusMap.ENABLE,
         NOT: {
-          id: { in: disabledAccounts },
+          id: { in: disabledAccounts.filter(Boolean) },
         },
       },
     });
