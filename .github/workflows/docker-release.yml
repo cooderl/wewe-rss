@@ -2,9 +2,9 @@ name: Build WeWeRSS images and push image to docker hub
 on:
   workflow_dispatch:
   push:
-    paths:
-      - "apps/**"
-      - "Dockerfile"
+    # paths:
+    #   - "apps/**"
+    #   - "Dockerfile"
     tags:
       - "v*.*.*"
 
@@ -98,3 +98,10 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_NAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
           repository: ${{ secrets.DOCKER_HUB_NAME }}/wewe-rss
+
+      - name: Create a Release
+        uses: elgohr/Github-Release-Action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          title: v${{ github.ref }}
