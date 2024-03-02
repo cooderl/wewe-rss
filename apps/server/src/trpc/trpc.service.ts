@@ -146,8 +146,13 @@ export class TrpcService {
       if (type === 'sqlite') {
         // sqlite3 不支持 createMany
         const inserts = articles.map(({ id, picUrl, publishTime, title }) =>
-          this.prismaService.article.create({
-            data: { id, mpId, picUrl, publishTime, title },
+          this.prismaService.article.upsert({
+            create: { id, mpId, picUrl, publishTime, title },
+            update: {
+              publishTime,
+              title,
+            },
+            where: { id },
           }),
         );
         results = await this.prismaService.$transaction(inserts);
