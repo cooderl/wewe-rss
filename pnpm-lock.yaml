@@ -49,6 +49,9 @@ importers:
       class-validator:
         specifier: ^0.14.1
         version: 0.14.1
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.10
       express:
         specifier: ^4.18.2
         version: 4.18.2

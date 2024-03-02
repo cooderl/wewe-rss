@@ -5,6 +5,17 @@ import { statusMap } from '@server/constants';
 import { PrismaService } from '@server/prisma/prisma.service';
 import { TRPCError, initTRPC } from '@trpc/server';
 import Axios, { AxiosInstance } from 'axios';
+import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+/**
+ * 读书账号每日小黑屋
+ */
+const blockedAccountsMap = new Map<string, string[]>();
 
 @Injectable()
 export class TrpcService {
@@ -39,16 +50,36 @@ export class TrpcService {
         this.logger.log('error: ', error);
         const errMsg = error.response?.data?.message || '';
 
+        const id = (error.config.headers as any).xid;
         if (errMsg.includes('WeReadError401')) {
           // 账号失效
           await this.prismaService.account.update({
-            where: { id: (error.config.headers as any).xid },
+            where: { id },
             data: { status: statusMap.INVALID },
           });
-        } else if (errMsg.includes('WeReadError400')) {
-          // TODO 处理请求参数出错，可能是账号被限制导致的
-        } else if (errMsg.includes('WeReadError429')) {
-          //TODO 处理请求频繁
+          this.logger.error(`账号（${id}）登录失效，已禁用`);
+        } else {
+          if (errMsg.includes('WeReadError400')) {
+            // TODO 处理请求参数出错，可能是账号被限制导致的
+            this.logger.error(
+              `账号（${id}）处理请求参数出错，可能是账号被限制导致的，打入小黑屋`,
+            );
+            this.logger.error('WeReadError400: ', errMsg);
+          } else if (errMsg.includes('WeReadError429')) {
+            //TODO 处理请求频繁
+            this.logger.error(`账号（${id}）请求频繁，打入小黑屋`);
+          }
+
+          const today = this.getTodayDate();
+
+          const blockedAccounts = blockedAccountsMap.get(today);
+
+          if (Array.isArray(blockedAccounts)) {
+            blockedAccounts.push(id);
+            blockedAccountsMap.set(today, blockedAccounts);
+          } else {
+            blockedAccountsMap.set(today, [id]);
+          }
         }
 
         return Promise.reject(error);
@@ -56,14 +87,33 @@ export class TrpcService {
     );
   }
 
-  async getMpArticles(mpId: string) {
+  private getTodayDate() {
+    return dayjs.tz(new Date(), 'Asia/Shanghai').format('YYYY-MM-DD');
+  }
+
+  private async getAvailableAccount() {
+    const today = this.getTodayDate();
+    const disabledAccounts = blockedAccountsMap.get(today) || [];
+    this.logger.debug('disabledAccounts: ', disabledAccounts);
+
     const account = await this.prismaService.account.findFirst({
-      where: { status: statusMap.ENABLE },
+      where: {
+        status: statusMap.ENABLE,
+        NOT: {
+          id: { in: disabledAccounts },
+        },
+      },
     });
 
     if (!account) {
       throw new Error('暂无可用读书账号!');
     }
+
+    return account;
+  }
+
+  async getMpArticles(mpId: string) {
+    const account = await this.getAvailableAccount();
 
     return this.request
       .get<
@@ -107,12 +157,7 @@ export class TrpcService {
   }
 
   async getMpInfo(url: string) {
-    const account = await this.prismaService.account.findFirst({
-      where: { status: statusMap.ENABLE },
-    });
-    if (!account) {
-      throw new Error('暂无可用读书账号!');
-    }
+    const account = await this.getAvailableAccount();
 
     return this.request
       .post<

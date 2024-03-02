@@ -10,7 +10,7 @@ import { Feed } from 'feed';
 import got, { Got } from 'got';
 import { load } from 'cheerio';
 import { minify } from 'html-minifier';
-import * as NodeCache from 'node-cache';
+import NodeCache from 'node-cache';
 import pMap from '@cjs-exporter/p-map';
 
 const mpCache = new NodeCache({
