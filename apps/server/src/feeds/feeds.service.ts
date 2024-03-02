@@ -121,12 +121,14 @@ export class FeedsService {
     type,
     feedInfo,
     articles,
+    mode,
   }: {
     type: string;
     feedInfo: FeedInfo;
     articles: Article[];
+    mode?: string;
   }) {
-    const { originUrl, mode } =
+    const { originUrl, mode: globalMode } =
       this.configService.get<ConfigurationType['feed']>('feed')!;
 
     const link = `${originUrl}/feeds/${feedInfo.id}.${type}`;
@@ -149,7 +151,11 @@ export class FeedsService {
       objects: `WeWe-RSS`,
     });
 
-    const enableFullText = mode === 'fulltext';
+    /**mode 高于 globalMode。如果 mode 值存在，取 mode 值*/
+    const enableFullText =
+      typeof mode === 'string'
+        ? mode === 'fulltext'
+        : globalMode === 'fulltext';
 
     const mapper = async (item) => {
       const { title, id, publishTime, picUrl } = item;
@@ -182,10 +188,12 @@ export class FeedsService {
     id,
     type,
     limit,
+    mode,
   }: {
     id?: string;
     type: string;
     limit: number;
+    mode?: string;
   }) {
     if (!feedTypes.includes(type as any)) {
       type = 'atom';
@@ -227,7 +235,7 @@ export class FeedsService {
     }
 
     this.logger.log('handleGenerateFeed articles: ' + articles.length);
-    const feed = await this.renderFeed({ feedInfo, articles, type });
+    const feed = await this.renderFeed({ feedInfo, articles, type, mode });
 
     switch (type) {
       case 'rss':

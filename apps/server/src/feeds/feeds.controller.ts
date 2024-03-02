@@ -23,12 +23,14 @@ export class FeedsController {
     @Request() req: Req,
     @Response() res: Res,
     @Query('limit', new DefaultValuePipe(30), ParseIntPipe) limit: number = 30,
+    @Query('mode') mode: string,
   ) {
     const path = req.path;
     const type = path.split('.').pop() || '';
     const { content, mimeType } = await this.feedsService.handleGenerateFeed({
       type,
       limit,
+      mode,
     });
 
     res.setHeader('Content-Type', mimeType);
@@ -40,6 +42,7 @@ export class FeedsController {
     @Response() res: Res,
     @Param('feed') feed: string,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+    @Query('mode') mode: string,
   ) {
     const [id, type] = feed.split('.');
     this.logger.log('getFeed: ', id);
@@ -47,6 +50,7 @@ export class FeedsController {
       id,
       type,
       limit,
+      mode,
     });
 
     res.setHeader('Content-Type', mimeType);
