@@ -20,11 +20,11 @@
 
 ### 一键部署（待完善添加模板）
 
+请前往平台，填写本仓库URL进行部署。
+
 [Zeabur](https://zeabur.com/)
 
 [Railway](https://railway.app/)
-
-[Vercel](https://vercel.com/)
 
 ### Docker Compose 部署
 
@@ -40,12 +40,12 @@
 docker run -d \
   --name wewe-rss \
   -p 4000:4000 \
-  -e DATABASE_URL="file:../data/wewe-rss.db" \
-  -e DATABASE_TYPE="sqlite" \
+  -e DATABASE_URL=file:../data/wewe-rss.db \
+  -e DATABASE_TYPE=sqlite \
   -e AUTH_CODE=123567 \
   -e FEED_MODE=fulltext \
   -e MAX_REQUEST_PER_MINUTE=60 \
-  -e SERVER_ORIGIN_URL="http://localhost:4000" \
+  -e SERVER_ORIGIN_URL=http://localhost:4000 \
   -v $(pwd)/data:/app/data \
   cooderl/wewe-rss-sqlite:latest
 ```
@@ -99,6 +99,7 @@ docker run -d \
 <img width="400" src="./assets/preview2.png"/>
 
 1. 进入公众号源，点击添加，通过提交微信公众号分享链接，订阅微信公众号。
+  **（添加频率过高容易被封控，等24小时解封）**
 <img width="400" src="./assets/preview3.png"/>
 
 ## 环境变量
