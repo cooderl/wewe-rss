@@ -5,9 +5,6 @@ services:
     image: cooderl/wewe-rss-sqlite:latest
     ports:
       - 4000:4000
-    depends_on:
-      db:
-        condition: service_healthy
     environment:
       # 数据库连接地址
       - DATABASE_URL="file:../data/wewe-rss.db"
