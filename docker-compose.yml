@@ -19,7 +19,7 @@ services:
       interval: 10s
       retries: 10
 
-  server:
+  app:
     image: cooderl/wewe-rss:latest
     ports:
       - 4000:4000

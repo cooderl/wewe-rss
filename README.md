@@ -26,12 +26,31 @@
 
 [Vercel](https://vercel.com/)
 
-
 ### Docker Compose 部署
 
 [docker-compose.yml](https://github.com/cooderl/wewe-rss/blob/main/docker-compose.yml)
 
+[docker-compose.sqlite.yml](https://github.com/cooderl/wewe-rss/blob/main/docker-compose.sqlite.yml)
+
 ### Docker 命令启动
+
+#### Sqlite
+
+```sh
+docker run -d \
+  --name wewe-rss \
+  -p 4000:4000 \
+  -e DATABASE_URL="file:../data/wewe-rss.db" \
+  -e DATABASE_TYPE="sqlite" \
+  -e AUTH_CODE=123567 \
+  -e FEED_MODE=fulltext \
+  -e MAX_REQUEST_PER_MINUTE=60 \
+  -e SERVER_ORIGIN_URL="http://localhost:4000" \
+  -v $(pwd)/data:/app/data \
+  cooderl/wewe-rss-sqlite:latest
+```
+
+#### Mysql
 
 1. 创建docker网络
 
@@ -56,7 +75,7 @@ docker run -d \
 
 ```sh
 docker run -d \
-  --name server \
+  --name wewe-rss \
   -p 4000:4000 \
   -e DATABASE_URL='mysql://root:123456@db:3306/wewe-rss?schema=public&connect_timeout=30&pool_timeout=30&socket_timeout=30' \
   -e AUTH_CODE=123567 \
