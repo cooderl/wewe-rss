@@ -87,6 +87,8 @@ docker run -d \
 
 外网访问时，需将`SERVER_ORIGIN_URL`设置为服务器的公网 IP 或者域名地址
 
+[Nginx配置参考](https://raw.githubusercontent.com/cooderl/wewe-rss/main/assets/nginx.example.conf)
+
 ### 本地部署
 
 如果你想本地部署，请使用 `pnpm install &&  pnpm run -r build && pnpm run start:server` 命令(可以配合 pm2 来守护进程，防止被杀死)。
