@@ -1,0 +1,56 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl"] // 生成linux可执行文件
+}
+
+// 读书账号
+model Account {
+  id        String    @id
+  token     String    @map("token")
+  name      String    @map("name")
+  // 状态 0:失效 1:启用 2:禁用
+  status    Int       @default(1) @map("status")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
+
+  @@map("accounts")
+}
+
+// 订阅源
+model Feed {
+  id      String @id
+  mpName  String @map("mp_name")
+  mpCover String @map("mp_cover")
+  mpIntro String @map("mp_intro")
+  // 状态 0:失效 1:启用 2:禁用
+  status  Int    @default(1) @map("status")
+
+  // article最后同步时间
+  syncTime Int @default(0) @map("sync_time")
+
+  // 信息更新时间
+  updateTime Int @map("update_time")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
+
+  @@map("feeds")
+}
+
+model Article {
+  id          String @id
+  mpId        String @map("mp_id")
+  title       String @map("title")
+  picUrl      String @map("pic_url")
+  publishTime Int    @map("publish_time")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at")
+
+  @@map("articles")
+}

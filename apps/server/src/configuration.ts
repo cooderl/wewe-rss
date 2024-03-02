@@ -13,6 +13,8 @@ const configuration = () => {
 
   const feedMode = process.env.FEED_MODE as 'fulltext' | '';
 
+  const databaseType = process.env.DATABASE_TYPE || 'mysql';
+
   return {
     server: { isProd, port, host },
     throttler: { maxRequestPerMinute },
@@ -21,6 +23,9 @@ const configuration = () => {
     feed: {
       originUrl,
       mode: feedMode,
+    },
+    database: {
+      type: databaseType,
     },
   };
 };

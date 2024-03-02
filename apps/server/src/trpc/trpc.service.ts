@@ -129,24 +129,43 @@ export class TrpcService {
           Authorization: `Bearer ${account.token}`,
         },
       })
-      .then((res) => res.data);
+      .then((res) => res.data)
+      .then((res) => {
+        this.logger.log(`getMpArticles(${mpId}): ${res.length} articles`);
+        return res;
+      });
   }
 
   async refreshMpArticlesAndUpdateFeed(mpId: string) {
     const articles = await this.getMpArticles(mpId);
 
-    const results = await this.prismaService.article.createMany({
-      data: articles.map(({ id, picUrl, publishTime, title }) => ({
-        id,
-        mpId,
-        picUrl,
-        publishTime,
-        title,
-      })),
-      skipDuplicates: true,
-    });
+    if (articles.length > 0) {
+      let results;
+      const { type } =
+        this.configService.get<ConfigurationType['database']>('database')!;
+      if (type === 'sqlite') {
+        // sqlite3 不支持 createMany
+        const inserts = articles.map(({ id, picUrl, publishTime, title }) =>
+          this.prismaService.article.create({
+            data: { id, mpId, picUrl, publishTime, title },
+          }),
+        );
+        results = await this.prismaService.$transaction(inserts);
+      } else {
+        results = await (this.prismaService.article as any).createMany({
+          data: articles.map(({ id, picUrl, publishTime, title }) => ({
+            id,
+            mpId,
+            picUrl,
+            publishTime,
+            title,
+          })),
+          skipDuplicates: true,
+        });
+      }
 
-    this.logger.debug('refreshMpArticlesAndUpdateFeed results: ', results);
+      this.logger.debug('refreshMpArticlesAndUpdateFeed results: ', results);
+    }
 
     await this.prismaService.feed.update({
       where: { id: mpId },
