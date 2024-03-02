@@ -7,7 +7,7 @@ services:
       - 4000:4000
     environment:
       # 数据库连接地址
-      - DATABASE_URL="file:../data/wewe-rss.db"
+      - DATABASE_URL=file:"../data/wewe-rss.db"
       - DATABASE_TYPE="sqlite"
       # 服务接口请求授权码
       - AUTH_CODE=123567
