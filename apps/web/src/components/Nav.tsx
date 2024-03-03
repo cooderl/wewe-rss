@@ -5,10 +5,12 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
+  Tooltip,
 } from '@nextui-org/react';
 import { ThemeSwitcher } from './ThemeSwitcher';
 import { GitHubIcon } from './GitHubIcon';
 import { useLocation } from 'react-router-dom';
+import { appVersion } from '@web/utils/env';
 
 const navbarItemLink = [
   {
@@ -31,15 +33,17 @@ const Nav = () => {
   return (
     <div>
       <Navbar isBordered>
-        <NavbarBrand>
-          <Image
-            width={28}
-            alt="WeWe RSS"
-            className="mr-2"
-            src="https://r2-assets.111965.xyz/wewe-rss.png"
-          ></Image>
-          <p className="font-bold text-inherit">WeWe RSS</p>
-        </NavbarBrand>
+        <Tooltip content={`当前版本: v${appVersion}`} placement="left">
+          <NavbarBrand className="cursor-default">
+            <Image
+              width={28}
+              alt="WeWe RSS"
+              className="mr-2"
+              src="https://r2-assets.111965.xyz/wewe-rss.png"
+            ></Image>
+            <p className="font-bold text-inherit">WeWe RSS</p>
+          </NavbarBrand>
+        </Tooltip>
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
           {navbarItemLink.map((item) => {
             return (

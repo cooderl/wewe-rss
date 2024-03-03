@@ -8,3 +8,5 @@ interface ImportMetaEnv {
 interface Window {
   __WEWE_RSS_SERVER_ORIGIN_URL__?: string;
 }
+
+declare const __APP_VERSION__: string;
