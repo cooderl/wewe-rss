@@ -1,7 +1,7 @@
 <div align="center">
 <img src="https://raw.githubusercontent.com/cooderl/wewe-rss/main/assets/logo.png" width="80" alt="预览"/>
 
-<h1 align="center">WeWe RSS</h1>
+<h1 align="center"><a href="https://github.com/cooderl/wewe-rss">WeWe RSS</a></h1>
 
 更优雅的微信公众号订阅方式。
 
@@ -123,6 +123,17 @@ docker run -d \
 ## 风险声明
 
 为了确保本项目的持久运行，某些接口请求将通过`weread.111965.xyz`进行转发。请放心，该转发服务不会保存任何数据。
+
+## 打赏
+
+如果您觉得我们的项目有价值，并希望帮助我们继续发展，可以用以下几种加密货币打赏:
+
+BTC(Bitcoin): `1DGU9zRC8cvexq3W92Kzxqg5sNnbWPz9fE`
+
+ETH(Ethereum, ERC20): `0x6bb8cef666c346ac3926fd32edd27d8246dcece0`
+
+USDT(Tron, TRC20): `TLsukYHcXN34RXABZwppRE5AuPp8AWY7Wv`
+
 
 ## License
 
