@@ -5,7 +5,15 @@ import { ConfigService } from '@nestjs/config';
 import { json, urlencoded } from 'express';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigurationType } from './configuration';
-import { join } from 'path';
+import { join, resolve } from 'path';
+import { readFileSync } from 'fs';
+
+const packageJson = JSON.parse(
+  readFileSync(resolve(__dirname, '..', './package.json'), 'utf-8'),
+);
+
+const appVersion = packageJson.version;
+console.log('appVersion: v' + appVersion);
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
