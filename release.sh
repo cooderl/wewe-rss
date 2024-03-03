@@ -29,6 +29,6 @@ git commit -m "Release version $NEW_VERSION"
 git tag "v$NEW_VERSION"
 
 # 推送更改和标签到远程仓库
-git push && git push origin "v$NEW_VERSION"
+git push && git push origin --tags
 
 echo "Git tag v$NEW_VERSION has been created and pushed"
