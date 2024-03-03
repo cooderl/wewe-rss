@@ -33,6 +33,14 @@ export class TrpcRouter {
         const items = await this.prismaService.account.findMany({
           take: limit + 1,
           where: {},
+          select: {
+            id: true,
+            name: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true,
+            token: false,
+          },
           cursor: cursor
             ? {
                 id: cursor,
