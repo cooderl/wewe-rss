@@ -26,6 +26,8 @@
 
 [Railway](https://railway.app/)
 
+[HuggingFace部署参考](https://github.com/cooderl/wewe-rss/issues/32)
+
 ### Docker Compose 部署
 
 可参考 [docker-compose.yml](https://github.com/cooderl/wewe-rss/blob/main/docker-compose.yml) 和 [docker-compose.sqlite.yml](https://github.com/cooderl/wewe-rss/blob/main/docker-compose.sqlite.yml)
@@ -84,15 +86,6 @@ docker run -d \
 
 如果你想本地部署，请使用 `pnpm install &&  pnpm run -r build && pnpm run start:server` 命令(可以配合 pm2 来守护进程，防止被杀死)。
 
-## 使用方式
-
-1. 进入账号管理，点击添加账号，微信扫码登录微信读书账号。
-<img width="400" src="./assets/preview2.png"/>
-
-1. 进入公众号源，点击添加，通过提交微信公众号分享链接，订阅微信公众号。
-  **（添加频率过高容易被封控，等24小时解封）**
-<img width="400" src="./assets/preview3.png"/>
-
 ## 环境变量
 
 - `AUTH_CODE` （**必填项**）服务端接口请求授权码，(`/feeds`路径不需要)。
@@ -108,6 +101,17 @@ docker run -d \
 - `FEED_MODE` 输出模式，可选值 `fulltext`（RSS全文模式会使接口响应会变慢，占用更多内存）。
 
 - `CRON_EXPRESSION` 定时更新订阅源Cron表达式，默认为 `35 5,17 * * *`。
+
+
+## 使用方式
+
+1. 进入账号管理，点击添加账号，微信扫码登录微信读书账号。
+<img width="400" src="./assets/preview2.png"/>
+
+1. 进入公众号源，点击添加，通过提交微信公众号分享链接，订阅微信公众号。
+  **（添加频率过高容易被封控，等24小时解封）**
+<img width="400" src="./assets/preview3.png"/>
+
 
 ## 本地开发
 
