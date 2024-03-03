@@ -247,4 +247,19 @@ export class FeedsService {
         return { content: feed.atom1(), mimeType: feedMimeTypeMap[type] };
     }
   }
+
+  async getFeedList() {
+    const data = await this.prismaService.feed.findMany();
+
+    return data.map((item) => {
+      return {
+        id: item.id,
+        name: item.mpName,
+        intro: item.mpIntro,
+        cover: item.mpCover,
+        syncTime: item.syncTime,
+        updateTime: item.updateTime,
+      };
+    });
+  }
 }

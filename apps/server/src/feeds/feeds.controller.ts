@@ -18,6 +18,11 @@ export class FeedsController {
 
   constructor(private readonly feedsService: FeedsService) {}
 
+  @Get('/')
+  async getFeedList() {
+    return this.feedsService.getFeedList();
+  }
+
   @Get('/all.(json|rss|atom)')
   async getFeeds(
     @Request() req: Req,
