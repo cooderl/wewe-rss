@@ -10,7 +10,7 @@ const isProd = process.env.NODE_ENV === 'production';
 console.log('process.env.NODE_ENV: ', process.env.NODE_ENV);
 
 const packageJson = JSON.parse(
-  readFileSync(resolve(__dirname, '..', '..', './package.json'), 'utf-8'),
+  readFileSync(resolve(__dirname, './package.json'), 'utf-8'),
 );
 
 // https://vitejs.dev/config/
