@@ -38,12 +38,8 @@
 docker run -d \
   --name wewe-rss \
   -p 4000:4000 \
-  -e DATABASE_URL=file:../data/wewe-rss.db \
   -e DATABASE_TYPE=sqlite \
   -e AUTH_CODE=123567 \
-  -e FEED_MODE=fulltext \
-  -e MAX_REQUEST_PER_MINUTE=60 \
-  -e SERVER_ORIGIN_URL=http://localhost:4000 \
   -v $(pwd)/data:/app/data \
   cooderl/wewe-rss-sqlite:latest
 ```
@@ -77,15 +73,10 @@ docker run -d \
   -p 4000:4000 \
   -e DATABASE_URL='mysql://root:123456@db:3306/wewe-rss?schema=public&connect_timeout=30&pool_timeout=30&socket_timeout=30' \
   -e AUTH_CODE=123567 \
-  -e FEED_MODE=fulltext \
-  -e MAX_REQUEST_PER_MINUTE=60 \
-  -e SERVER_ORIGIN_URL="http://localhost:4000" \
   --network wewe-rss \
   cooderl/wewe-rss:latest
 
 ```
-
-外网访问时，需将`SERVER_ORIGIN_URL`设置为服务器的公网 IP 或者域名地址
 
 [Nginx配置参考](https://raw.githubusercontent.com/cooderl/wewe-rss/main/assets/nginx.example.conf)
 
@@ -104,13 +95,13 @@ docker run -d \
 
 ## 环境变量
 
-- `DATABASE_URL` （必填项）数据库地址，例如 `mysql://root:123456@127.0.0.1:3306/wewe-rss`。
+- `AUTH_CODE` （**必填项**）服务端接口请求授权码，(`/feeds`路径不需要)。
 
-- `DATABASE_TYPE` 数据库类型，使用 `sqlite` 需要填写 `sqlite`。
+- `DATABASE_URL` （**必填项**）数据库地址，例如 `mysql://root:123456@127.0.0.1:3306/wewe-rss`。
 
-- `AUTH_CODE` （必填项）服务端接口请求授权码，(`/feeds`路径不需要)。
+- `DATABASE_TYPE` 数据库类型，使用 `sqlite` 时需要填写 `sqlite`。
 
-- `SERVER_ORIGIN_URL` （必填项）服务端访问地址，用于RSS生成时使用。
+- `SERVER_ORIGIN_URL` 服务端访问地址，用于生成RSS的完整路径（外网访问时，设置为服务器的公网 IP 或者域名地址）。
 
 - `MAX_REQUEST_PER_MINUTE` 每分钟最大请求次数，默认 60。
 
@@ -130,4 +121,5 @@ docker run -d \
 为了确保本项目的持久运行，某些接口请求将通过`weread.111965.xyz`进行转发。请放心，该转发服务不会保存任何数据。
 
 ## License
+
 [MIT](https://raw.githubusercontent.com/cooderl/wewe-rss/main/LICENSE) @cooderl
