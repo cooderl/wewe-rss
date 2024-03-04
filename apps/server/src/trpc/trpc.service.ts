@@ -185,6 +185,7 @@ export class TrpcService {
   }
 
   async getMpInfo(url: string) {
+    url = url.trim();
     const account = await this.getAvailableAccount();
 
     return this.request
