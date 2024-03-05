@@ -230,7 +230,7 @@ const Feeds = () => {
                     size="sm"
                     showAnchorIcon
                     target="_blank"
-                    href={`${serverOriginUrl}/feeds/${currentMpInfo.id}`}
+                    href={`${serverOriginUrl}/feeds/${currentMpInfo.id}.atom`}
                     color="foreground"
                   >
                     RSS
