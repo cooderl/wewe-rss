@@ -26,7 +26,7 @@
 
 [Railway](https://railway.app/)
 
-[Hugging Face部署参考](https://github.com/cooderl/wewe-rss/issues/32)
+[Hugging Face部署参考](https://xiaoyublog.top/25609ef4-9b65-48c7-9d1a-7a2766fc368b.html)
 
 ### Docker Compose 部署
 
