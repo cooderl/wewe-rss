@@ -34,6 +34,7 @@ export class FeedsService {
         limit: 3,
         methods: ['GET'],
       },
+      timeout: 8 * 1e3,
       headers: {
         accept:
           'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -51,6 +52,16 @@ export class FeedsService {
         'upgrade-insecure-requests': '1',
         'user-agent':
           'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36',
+      },
+      hooks: {
+        beforeRetry: [
+          async (options, error, retryCount) => {
+            this.logger.warn(`retrying ${options.url}...`);
+            return new Promise((resolve) =>
+              setTimeout(resolve, 2e3 * (retryCount || 1)),
+            );
+          },
+        ],
       },
     });
   }
@@ -110,8 +121,9 @@ export class FeedsService {
     }
     const url = `https://mp.weixin.qq.com/s/${id}`;
     content = await this.getHtmlByUrl(url).catch((e) => {
-      this.logger.error('getHtmlByUrl error:', e);
-      return '';
+      this.logger.error(`getHtmlByUrl(${url}) error: ${e.message}`);
+
+      return '获取全文失败，请重试~';
     });
     mpCache.set(id, content);
     return content;
