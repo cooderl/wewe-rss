@@ -25,9 +25,7 @@ import { statusMap } from '@web/constants';
 const AccountPage = () => {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
-  const { refetch, data, isFetching } = trpc.account.list.useQuery({
-    limit: 100,
-  });
+  const { refetch, data, isFetching } = trpc.account.list.useQuery({});
 
   const { mutateAsync: updateAccount } = trpc.account.edit.useMutation({});
 

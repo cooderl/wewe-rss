@@ -30,9 +30,7 @@ const Feeds = () => {
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const { refetch: refetchFeedList, data: feedData } = trpc.feed.list.useQuery(
-    {
-      limit: 100,
-    },
+    {},
     {
       refetchOnWindowFocus: true,
     },
