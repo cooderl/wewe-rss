@@ -91,6 +91,38 @@ const Feeds = () => {
     return feedData?.items.find((item) => item.id === currentMpId);
   }, [currentMpId, feedData?.items]);
 
+  const handleExportOpml = async (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    if (!feedData?.items?.length) {
+      console.warn('没有订阅源');
+      return;
+    }
+
+    let opmlContent = `<?xml version="1.0" encoding="UTF-8"?>
+    <opml version="2.0">
+      <head>
+        <title>WeWeRSS 所有订阅源</title>
+      </head>
+      <body>
+    `;
+
+    feedData?.items.forEach((sub) => {
+      opmlContent += `    <outline text="${sub.mpName}" type="rss" xmlUrl="${window.location.origin}/feeds/${sub.id}.atom" htmlUrl="${window.location.origin}/feeds/${sub.id}.atom"/>\n`;
+    });
+
+    opmlContent += `    </body>
+    </opml>`;
+
+    const blob = new Blob([opmlContent], { type: 'text/xml;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'WeWeRSS-All.opml';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <>
       <div className="h-full flex justify-between">
@@ -236,15 +268,26 @@ const Feeds = () => {
                 </Tooltip>
               </div>
             ) : (
-              <Link
-                size="sm"
-                showAnchorIcon
-                target="_blank"
-                href={`${serverOriginUrl}/feeds/all.atom`}
-                color="foreground"
-              >
-                RSS
-              </Link>
+              <div className="flex gap-2">
+                <Link
+                  href="#"
+                  color="foreground"
+                  onClick={handleExportOpml}
+                  size="sm"
+                >
+                  导出OPML
+                </Link>
+                <Divider orientation="vertical" />
+                <Link
+                  size="sm"
+                  showAnchorIcon
+                  target="_blank"
+                  href={`${serverOriginUrl}/feeds/all.atom`}
+                  color="foreground"
+                >
+                  RSS
+                </Link>
+              </div>
             )}
           </div>
           <div className="p-2 overflow-y-auto">
