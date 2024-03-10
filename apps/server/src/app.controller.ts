@@ -1,9 +1,14 @@
 import { Controller, Get, Redirect, Render } from '@nestjs/common';
 import { AppService } from './app.service';
+import { ConfigService } from '@nestjs/config';
+import { ConfigurationType } from './configuration';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Get()
   getHello(): string {
@@ -23,9 +28,12 @@ export class AppController {
   @Render('index.hbs')
   dashRender() {
     const { originUrl: weweRssServerOriginUrl } =
-      this.appService.getFeedConfig();
+      this.configService.get<ConfigurationType['feed']>('feed')!;
+    const { code } = this.configService.get<ConfigurationType['auth']>('auth')!;
+
     return {
       weweRssServerOriginUrl,
+      enabledAuthCode: !!code,
     };
   }
 }

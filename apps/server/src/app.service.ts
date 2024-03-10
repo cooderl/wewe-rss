@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ConfigurationType } from './configuration';
 
 @Injectable()
 export class AppService {
@@ -11,9 +10,5 @@ export class AppService {
     <div>>> <a href="/dash">WeWe RSS</a> <<</div>
     </div>
     `;
-  }
-
-  getFeedConfig() {
-    return this.configService.get<ConfigurationType['feed']>('feed')!;
   }
 }

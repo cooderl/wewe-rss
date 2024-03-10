@@ -401,7 +401,7 @@ export class TrpcRouter {
           const authCode =
             this.configService.get<ConfigurationType['auth']>('auth')!.code;
 
-          if (req.headers.authorization !== authCode) {
+          if (authCode && req.headers.authorization !== authCode) {
             return {
               errorMsg: 'authCode不正确！',
             };

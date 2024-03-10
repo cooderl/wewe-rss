@@ -5,13 +5,19 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { isTRPCClientError, trpc } from '../utils/trpc';
 import { getAuthCode, setAuthCode } from '../utils/auth';
-import { serverOriginUrl } from '../utils/env';
+import { enabledAuthCode, serverOriginUrl } from '../utils/env';
 
 export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const navigate = useNavigate();
 
+  const handleNoAuth = () => {
+    if (enabledAuthCode) {
+      setAuthCode('');
+      navigate('/login');
+    }
+  };
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -38,8 +44,7 @@ export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
                     description: error.message,
                   });
 
-                  setAuthCode('');
-                  navigate('/login');
+                  handleNoAuth();
                 } else {
                   toast.error('请求失败!', {
                     description: error.message,
@@ -56,8 +61,7 @@ export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
                   toast.error('无权限', {
                     description: error.message,
                   });
-                  setAuthCode(null);
-                  navigate('/login');
+                  handleNoAuth();
                 } else {
                   toast.error('请求失败!', {
                     description: error.message,
@@ -82,9 +86,10 @@ export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
             const token = getAuthCode();
 
             if (!token) {
-              navigate('/login');
+              handleNoAuth();
               return {};
             }
+
             return token
               ? {
                   Authorization: `${token}`,
