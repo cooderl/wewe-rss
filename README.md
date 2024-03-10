@@ -15,6 +15,7 @@
 - [x]  后台自动定时更新内容
 - [x]  微信公众号RSS生成（支持`.atom`\.`rss`\.`json`格式)
 - [x]  支持全文内容输出，让阅读无障碍
+- [x]  所有订阅源导出OPML
 
 ## 部署
 
@@ -88,11 +89,11 @@ docker run -d \
 
 ## 环境变量
 
-- `AUTH_CODE` （**必填项**）服务端接口请求授权码，(`/feeds`路径不需要)。
-
 - `DATABASE_URL` （**必填项**）数据库地址，例如 `mysql://root:123456@127.0.0.1:3306/wewe-rss`。
 
 - `DATABASE_TYPE` 数据库类型，使用 `sqlite` 时需要填写 `sqlite`。
+
+- `AUTH_CODE` 服务端接口请求授权码，(`/feeds`路径不需要)。
 
 - `SERVER_ORIGIN_URL` 服务端访问地址，用于生成RSS的完整路径（外网访问时，设置为服务器的公网 IP 或者域名地址）。
 
