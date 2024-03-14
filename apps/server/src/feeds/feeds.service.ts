@@ -156,11 +156,16 @@ export class FeedsService {
       copyright: '',
       updated: new Date(feedInfo.updateTime * 1e3),
       generator: 'WeWe-RSS',
+      author: { name: feedInfo.mpName },
     });
 
     feed.addExtension({
       name: 'generator',
       objects: `WeWe-RSS`,
+    });
+
+    const feeds = await this.prismaService.feed.findMany({
+      select: { id: true, mpName: true },
     });
 
     /**mode 高于 globalMode。如果 mode 值存在，取 mode 值*/
@@ -169,10 +174,13 @@ export class FeedsService {
         ? mode === 'fulltext'
         : globalMode === 'fulltext';
 
+    const showAuthor = feedInfo.id === 'all';
+
     const mapper = async (item) => {
-      const { title, id, publishTime, picUrl } = item;
+      const { title, id, publishTime, picUrl, mpId } = item;
       const link = `https://mp.weixin.qq.com/s/${id}`;
 
+      const mpName = feeds.find((item) => item.id === mpId)?.mpName || '-';
       const published = new Date(publishTime * 1e3);
 
       let description = '';
@@ -188,6 +196,7 @@ export class FeedsService {
         description,
         date: published,
         image: picUrl,
+        author: showAuthor ? [{ name: mpName }] : undefined,
       });
     };
 
