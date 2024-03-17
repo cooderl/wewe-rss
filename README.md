@@ -114,6 +114,18 @@ docker run -d \
 <img width="400" src="./assets/preview3.png"/>
 
 
+## 账号状态说明
+
+- 今日小黑屋 
+  > 账号被封控，等一天恢复
+  > 如果账号正常，可以通过重启服务/容器清除小黑屋记录
+
+- 禁用
+  > 不使用该账号
+
+- 失效
+  > 账号登录状态失效，需要重新登录
+
 ## 本地开发
 
 1. 安装 nodejs 18 和 pnpm；
@@ -124,17 +136,6 @@ docker run -d \
 ## 风险声明
 
 为了确保本项目的持久运行，某些接口请求将通过`weread.111965.xyz`进行转发。请放心，该转发服务不会保存任何数据。
-
-## 打赏
-
-如果您觉得我们的项目有价值，并希望帮助我们继续发展，可以用以下几种加密货币打赏:
-
-BTC(Bitcoin): `1DGU9zRC8cvexq3W92Kzxqg5sNnbWPz9fE`
-
-ETH(Ethereum, ERC20): `0x6bb8cef666c346ac3926fd32edd27d8246dcece0`
-
-USDT(Tron, TRC20): `TLsukYHcXN34RXABZwppRE5AuPp8AWY7Wv`
-
 
 ## License
 
