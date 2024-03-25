@@ -127,7 +127,7 @@ export class TrpcService {
           picUrl: string;
           publishTime: number;
         }[]
-      >(`/api/platform/mps/${mpId}/articles`, {
+      >(`/api/v2/platform/mps/${mpId}/articles`, {
         headers: {
           xid: account.id,
           Authorization: `Bearer ${account.token}`,
@@ -198,7 +198,7 @@ export class TrpcService {
           updateTime: number;
         }[]
       >(
-        `/api/platform/wxs2mp`,
+        `/api/v2/platform/wxs2mp`,
         { url },
         {
           headers: {
@@ -212,21 +212,21 @@ export class TrpcService {
 
   async createLoginUrl() {
     return this.request
-      .post<{
+      .get<{
         uuid: string;
         scanUrl: string;
-      }>(`/api/login/platform`)
+      }>(`/api/v2/login/platform`)
       .then((res) => res.data);
   }
 
   async getLoginResult(id: string) {
     return this.request
       .get<{
-        message: 'waiting' | 'success';
+        message: string;
         vid?: number;
         token?: string;
         username?: string;
-      }>(`/api/login/platform/${id}`)
+      }>(`/api/v2/login/platform/${id}`, { timeout: 120 * 1e3 })
       .then((res) => res.data);
   }
 }

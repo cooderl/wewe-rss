@@ -21,11 +21,15 @@ import dayjs from 'dayjs';
 import { StatusDropdown } from '@web/components/StatusDropdown';
 import { trpc } from '@web/utils/trpc';
 import { statusMap } from '@web/constants';
+import { useEffect, useState } from 'react';
 
 const AccountPage = () => {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+  const [count, setCount] = useState(0);
 
   const { refetch, data, isFetching } = trpc.account.list.useQuery({});
+
+  const queryUtils = trpc.useUtils();
 
   const { mutateAsync: updateAccount } = trpc.account.edit.useMutation({});
 
@@ -34,38 +38,47 @@ const AccountPage = () => {
   const { mutateAsync: addAccount } = trpc.account.add.useMutation({});
 
   const { mutateAsync, data: loginData } =
-    trpc.platform.createLoginUrl.useMutation();
+    trpc.platform.createLoginUrl.useMutation({
+      onSuccess(data) {
+        if (data.uuid) {
+          setCount(60);
+        }
+      },
+    });
 
-  trpc.platform.getLoginResult.useQuery(
+  const { data: loginResult } = trpc.platform.getLoginResult.useQuery(
     {
       id: loginData?.uuid ?? '',
     },
     {
-      refetchInterval: (data) => {
-        if (data?.message === 'waiting') {
-          return 2000;
-        }
-        return false;
-      },
-      refetchIntervalInBackground: true,
+      refetchIntervalInBackground: false,
       enabled: !!loginData?.uuid,
       async onSuccess(data) {
-        if (data.message === 'success') {
+        if (data.vid && data.token) {
           const name = data.username!;
+          await addAccount({ id: `${data.vid}`, name, token: data.token });
 
-          if (data.vid && data.token) {
-            await addAccount({ id: `${data.vid}`, name, token: data.token });
-
-            onClose();
-            toast.success('添加成功', {
-              description: `用户名：${name}(${data.vid})`,
-            });
-            refetch();
-          }
+          onClose();
+          toast.success('添加成功', {
+            description: `用户名：${name}(${data.vid})`,
+          });
+          refetch();
+        } else if (data.message) {
+          toast.error(`登录失败: ${data.message}`);
         }
       },
     },
   );
+
+  useEffect(() => {
+    let timerId;
+    if (count > 0 && isOpen) {
+      timerId = setTimeout(() => {
+        setCount(count - 1);
+      }, 1000);
+    }
+    return () => timerId && clearTimeout(timerId);
+  }, [count, isOpen]);
 
   return (
     <div>
@@ -155,7 +168,13 @@ const AccountPage = () => {
         </TableBody>
       </Table>
 
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={async () => {
+          onOpenChange();
+          await queryUtils.platform.getLoginResult.cancel();
+        }}
+      >
         <ModalContent>
           {() => (
             <>
@@ -166,13 +185,27 @@ const AccountPage = () => {
                 <div className="m-auto pb-8 text-center">
                   {loginData ? (
                     <div>
-                      <QRCodeSVG size={150} value={loginData?.scanUrl} />
-                      <div className="mt-4">微信扫码登录</div>
+                      <div className="relative">
+                        {loginResult?.message && (
+                          <div className="absolute top-0 left-0 bottom-0 right-0 bg-white bg-opacity-75 flex justify-center items-center">
+                            <div className="text-xl">
+                              {loginResult?.message}
+                            </div>
+                          </div>
+                        )}
+                        <QRCodeSVG size={150} value={loginData?.scanUrl} />
+                      </div>
+                      <div className="mt-4">
+                        微信扫码登录{' '}
+                        {!loginResult?.message && count > 0 && (
+                          <span className="text-red-400">({count}s)</span>
+                        )}
+                      </div>
                     </div>
                   ) : (
                     <div className="m-auto flex justify-center align-middle items-center">
                       <Spinner />
-                      loading...
+                      二维码加载中
                     </div>
                   )}
                 </div>
