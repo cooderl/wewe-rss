@@ -98,6 +98,7 @@ export class TrpcRouter {
           update: data,
           create: input,
         });
+        this.trpcService.removeBlockedAccount(id);
 
         return account;
       }),
@@ -118,12 +119,15 @@ export class TrpcRouter {
           where: { id },
           data,
         });
+        this.trpcService.removeBlockedAccount(id);
         return account;
       }),
     delete: this.trpcService.protectedProcedure
       .input(z.string())
       .mutation(async ({ input: id }) => {
         await this.prismaService.account.delete({ where: { id } });
+        this.trpcService.removeBlockedAccount(id);
+
         return id;
       }),
   });

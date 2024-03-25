@@ -75,7 +75,9 @@ export class TrpcService {
           const blockedAccounts = blockedAccountsMap.get(today);
 
           if (Array.isArray(blockedAccounts)) {
-            blockedAccounts.push(id);
+            if (id) {
+              blockedAccounts.push(id);
+            }
             blockedAccountsMap.set(today, blockedAccounts);
           } else {
             blockedAccountsMap.set(today, [id]);
@@ -86,6 +88,16 @@ export class TrpcService {
       },
     );
   }
+
+  removeBlockedAccount = (vid: string) => {
+    const today = this.getTodayDate();
+
+    const blockedAccounts = blockedAccountsMap.get(today);
+    if (Array.isArray(blockedAccounts)) {
+      const newBlockedAccounts = blockedAccounts.filter((id) => id !== vid);
+      blockedAccountsMap.set(today, newBlockedAccounts);
+    }
+  };
 
   private getTodayDate() {
     return dayjs.tz(new Date(), 'Asia/Shanghai').format('YYYY-MM-DD');
