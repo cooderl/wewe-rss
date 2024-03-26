@@ -58,30 +58,27 @@ export class TrpcService {
             data: { status: statusMap.INVALID },
           });
           this.logger.error(`账号（${id}）登录失效，已禁用`);
+        } else if (errMsg.includes('WeReadError429')) {
+          //TODO 处理请求频繁
+          this.logger.error(`账号（${id}）请求频繁，打入小黑屋`);
+        }
+
+        const today = this.getTodayDate();
+
+        const blockedAccounts = blockedAccountsMap.get(today);
+
+        if (Array.isArray(blockedAccounts)) {
+          if (id) {
+            blockedAccounts.push(id);
+          }
+          blockedAccountsMap.set(today, blockedAccounts);
+        } else if (errMsg.includes('WeReadError400')) {
+          this.logger.error(`账号（${id}）处理请求参数出错`);
+          this.logger.error('WeReadError400: ', errMsg);
+          // 30s 后重试
+          await new Promise((resolve) => setTimeout(resolve, 30 * 1e3));
         } else {
-          if (errMsg.includes('WeReadError400')) {
-            // TODO 处理请求参数出错，可能是账号被限制导致的
-            this.logger.error(
-              `账号（${id}）处理请求参数出错，可能是账号被限制导致的，打入小黑屋`,
-            );
-            this.logger.error('WeReadError400: ', errMsg);
-          } else if (errMsg.includes('WeReadError429')) {
-            //TODO 处理请求频繁
-            this.logger.error(`账号（${id}）请求频繁，打入小黑屋`);
-          }
-
-          const today = this.getTodayDate();
-
-          const blockedAccounts = blockedAccountsMap.get(today);
-
-          if (Array.isArray(blockedAccounts)) {
-            if (id) {
-              blockedAccounts.push(id);
-            }
-            blockedAccountsMap.set(today, blockedAccounts);
-          } else {
-            blockedAccountsMap.set(today, [id]);
-          }
+          this.logger.error("Can't handle this error: ", errMsg);
         }
 
         return Promise.reject(error);
