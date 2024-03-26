@@ -203,6 +203,15 @@ export class TrpcService {
     });
   }
 
+  async refreshAllMpArticlesAndUpdateFeed() {
+    const mps = await this.prismaService.feed.findMany();
+
+    for (const { id } of mps) {
+      await this.refreshMpArticlesAndUpdateFeed(id);
+      await new Promise((resolve) => setTimeout(resolve, 10 * 1e3));
+    }
+  }
+
   async getMpInfo(url: string) {
     url = url.trim();
     const account = await this.getAvailableAccount();

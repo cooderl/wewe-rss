@@ -69,7 +69,7 @@ const Feeds = () => {
         updateTime: item.updateTime,
         status: 1,
       });
-      await refreshMpArticles(item.id);
+      await refreshMpArticles({ mpId: item.id });
 
       toast.success('添加成功', {
         description: `公众号 ${item.name}`,
@@ -194,7 +194,7 @@ const Feeds = () => {
                 </div>
                 <Divider orientation="vertical" />
                 <Tooltip
-                  content="频繁调用会导致一段时间内不可用！"
+                  content="频繁调用可能会导致一段时间内不可用"
                   color="danger"
                 >
                   <Link
@@ -204,7 +204,7 @@ const Feeds = () => {
                     onClick={async (ev) => {
                       ev.preventDefault();
                       ev.stopPropagation();
-                      await refreshMpArticles(currentMpInfo.id);
+                      await refreshMpArticles({ mpId: currentMpInfo.id });
                       await refetchFeedList();
                       await queryUtils.article.list.reset();
                     }}
@@ -269,6 +269,25 @@ const Feeds = () => {
               </div>
             ) : (
               <div className="flex gap-2">
+                <Tooltip
+                  content="频繁调用可能会导致一段时间内不可用"
+                  color="danger"
+                >
+                  <Link
+                    size="sm"
+                    href="#"
+                    isDisabled={isGetArticlesLoading}
+                    onClick={async (ev) => {
+                      ev.preventDefault();
+                      ev.stopPropagation();
+                      await refreshMpArticles({});
+                      await refetchFeedList();
+                      await queryUtils.article.list.reset();
+                    }}
+                  >
+                    {isGetArticlesLoading ? '更新中...' : '更新全部'}
+                  </Link>
+                </Tooltip>
                 <Link
                   href="#"
                   color="foreground"

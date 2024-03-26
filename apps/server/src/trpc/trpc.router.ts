@@ -241,9 +241,17 @@ export class TrpcRouter {
       }),
 
     refreshArticles: this.trpcService.protectedProcedure
-      .input(z.string())
-      .mutation(async ({ input: mpId }) => {
-        await this.trpcService.refreshMpArticlesAndUpdateFeed(mpId);
+      .input(
+        z.object({
+          mpId: z.string().optional(),
+        }),
+      )
+      .mutation(async ({ input: { mpId } }) => {
+        if (mpId) {
+          await this.trpcService.refreshMpArticlesAndUpdateFeed(mpId);
+        } else {
+          await this.trpcService.refreshAllMpArticlesAndUpdateFeed();
+        }
       }),
   });
 
