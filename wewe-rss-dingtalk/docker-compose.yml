@@ -1,0 +1,6 @@
+version: '3.9'
+
+services:
+  wewe-rss-dingtalk:
+    build: .
+    container_name: wewe-rss-dingtalk
