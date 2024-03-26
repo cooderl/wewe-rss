@@ -80,9 +80,14 @@ export class FeedsService {
 
     for (const feed of feeds) {
       this.logger.debug('feed', feed.id);
-      await this.trpcService.refreshMpArticlesAndUpdateFeed(feed.id);
-      // wait 30s for next feed
-      await new Promise((resolve) => setTimeout(resolve, 90 * 1e3));
+      try {
+        await this.trpcService.refreshMpArticlesAndUpdateFeed(feed.id);
+      } catch (err) {
+        this.logger.error('handleUpdateFeedsCron error', err);
+      } finally {
+        // wait 30s for next feed
+        await new Promise((resolve) => setTimeout(resolve, 30 * 1e3));
+      }
     }
   }
 
