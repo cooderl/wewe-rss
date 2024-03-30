@@ -80,7 +80,7 @@ jobs:
           tags: ${{ steps.meta-sqlite.outputs.tags }}
           labels: ${{ steps.meta-sqlite.outputs.labels }}
           target: app-sqlite
-          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          platforms: linux/amd64,linux/arm64
           cache-from: type=gha,scope=docker-release
           cache-to: type=gha,mode=max,scope=docker-release
 
@@ -105,7 +105,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           target: app
-          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          platforms: linux/amd64,linux/arm64
           cache-from: type=gha,scope=docker-release
           cache-to: type=gha,mode=max,scope=docker-release
 
