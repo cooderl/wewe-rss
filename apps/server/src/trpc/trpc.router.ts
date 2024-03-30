@@ -253,6 +253,12 @@ export class TrpcRouter {
           await this.trpcService.refreshAllMpArticlesAndUpdateFeed();
         }
       }),
+
+    isRefreshAllMpArticlesRunning: this.trpcService.protectedProcedure.query(
+      async () => {
+        return this.trpcService.isRefreshAllMpArticlesRunning;
+      },
+    ),
   });
 
   articleRouter = this.trpcService.router({

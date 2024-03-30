@@ -49,6 +49,9 @@ const Feeds = () => {
   const { mutateAsync: refreshMpArticles, isLoading: isGetArticlesLoading } =
     trpc.feed.refreshArticles.useMutation();
 
+  const { data: isRefreshAllMpArticlesRunning } =
+    trpc.feed.isRefreshAllMpArticlesRunning.useQuery();
+
   const { mutateAsync: deleteFeed, isLoading: isDeleteFeedLoading } =
     trpc.feed.delete.useMutation({});
 
@@ -276,7 +279,9 @@ const Feeds = () => {
                   <Link
                     size="sm"
                     href="#"
-                    isDisabled={isGetArticlesLoading}
+                    isDisabled={
+                      isRefreshAllMpArticlesRunning || isGetArticlesLoading
+                    }
                     onClick={async (ev) => {
                       ev.preventDefault();
                       ev.stopPropagation();
@@ -285,7 +290,9 @@ const Feeds = () => {
                       await queryUtils.article.list.reset();
                     }}
                   >
-                    {isGetArticlesLoading ? '更新中...' : '更新全部'}
+                    {isRefreshAllMpArticlesRunning || isGetArticlesLoading
+                      ? '更新中...'
+                      : '更新全部'}
                   </Link>
                 </Tooltip>
                 <Link

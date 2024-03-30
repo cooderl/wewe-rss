@@ -203,12 +203,22 @@ export class TrpcService {
     });
   }
 
-  async refreshAllMpArticlesAndUpdateFeed() {
-    const mps = await this.prismaService.feed.findMany();
+  isRefreshAllMpArticlesRunning = false;
 
-    for (const { id } of mps) {
-      await this.refreshMpArticlesAndUpdateFeed(id);
-      await new Promise((resolve) => setTimeout(resolve, 10 * 1e3));
+  async refreshAllMpArticlesAndUpdateFeed() {
+    if (this.isRefreshAllMpArticlesRunning) {
+      this.logger.log('refreshAllMpArticlesAndUpdateFeed is running');
+      return;
+    }
+    const mps = await this.prismaService.feed.findMany();
+    this.isRefreshAllMpArticlesRunning = true;
+    try {
+      for (const { id } of mps) {
+        await this.refreshMpArticlesAndUpdateFeed(id);
+        await new Promise((resolve) => setTimeout(resolve, 10 * 1e3));
+      }
+    } finally {
+      this.isRefreshAllMpArticlesRunning = false;
     }
   }
 
