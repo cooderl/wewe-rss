@@ -94,7 +94,7 @@ docker run -d \
 
 - `DATABASE_TYPE` 数据库类型，使用 `sqlite` 时需要填写 `sqlite`。
 
-- `AUTH_CODE` 服务端接口请求授权码，(`/feeds`路径不需要)。
+- `AUTH_CODE` 服务端接口请求授权码，如果设置为空字符或不设置将不启用。(`/feeds`路径不需要)
 
 - `SERVER_ORIGIN_URL` 服务端访问地址，用于生成RSS的完整路径（外网访问时，设置为服务器的公网 IP 或者域名地址）。
 
