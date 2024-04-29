@@ -119,7 +119,7 @@ export class TrpcService {
       take: 10,
     });
 
-    if (!account) {
+    if (!account || account.length === 0) {
       throw new Error('暂无可用读书账号!');
     }
 
