@@ -6,3 +6,4 @@ dist
 .env
 .next
 .DS_Store
+./wewe-rss-dingtalk
