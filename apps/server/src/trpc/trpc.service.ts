@@ -109,20 +109,21 @@ export class TrpcService {
 
   private async getAvailableAccount() {
     const disabledAccounts = this.getBlockedAccountIds();
-    const account = await this.prismaService.account.findFirst({
+    const account = await this.prismaService.account.findMany({
       where: {
         status: statusMap.ENABLE,
         NOT: {
           id: { in: disabledAccounts },
         },
       },
+      take: 10,
     });
 
-    if (!account) {
+    if (!account || account.length === 0) {
       throw new Error('暂无可用读书账号!');
     }
 
-    return account;
+    return account[Math.floor(Math.random() * account.length)];
   }
 
   async getMpArticles(mpId: string, retryCount = 3) {
