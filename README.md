@@ -104,6 +104,9 @@ docker run -d \
 
 - `CRON_EXPRESSION` 定时更新订阅源Cron表达式，默认为 `35 5,17 * * *`。
 
+## 支持钉钉通知
+
+进入wewe-rss-dingtalk目录按照README.md指引部署
 
 ## 使用方式
 

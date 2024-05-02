@@ -1,0 +1,4 @@
+DingtalkChatbot==1.5.3
+mysql-connector-python
+jason
+pytz
