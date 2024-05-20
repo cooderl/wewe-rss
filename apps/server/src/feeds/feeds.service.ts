@@ -10,13 +10,13 @@ import { Feed } from 'feed';
 import got, { Got } from 'got';
 import { load } from 'cheerio';
 import { minify } from 'html-minifier';
-import NodeCache from 'node-cache';
+import { LRUCache } from 'lru-cache';
 import pMap from '@cjs-exporter/p-map';
 
 console.log('CRON_EXPRESSION: ', process.env.CRON_EXPRESSION);
 
-const mpCache = new NodeCache({
-  maxKeys: 1000,
+const mpCache = new LRUCache<string, string>({
+  max: 5000,
 });
 
 @Injectable()
@@ -120,7 +120,7 @@ export class FeedsService {
   }
 
   async tryGetContent(id: string) {
-    let content = mpCache.get(id) as string;
+    let content = mpCache.get(id);
     if (content) {
       return content;
     }

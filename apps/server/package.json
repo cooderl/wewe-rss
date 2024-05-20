@@ -43,7 +43,7 @@
     "got": "11.8.6",
     "hbs": "^4.2.0",
     "html-minifier": "^4.0.0",
-    "node-cache": "^5.1.2",
+    "lru-cache": "^10.2.2",
     "prisma": "^5.10.2",
     "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1",
