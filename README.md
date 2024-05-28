@@ -24,7 +24,9 @@
 
 你可以通过以下平台一键部署，只需填写本项目的URL即可。
 
-[Zeabur](https://zeabur.com/)
+[Zeabur](https://zeabur.com/) 
+
+[![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/DI9BBD)
 
 [Railway](https://railway.app/)
 
