@@ -3,7 +3,7 @@ version: '3.9'
 services:
   db:
     image: mysql:latest
-    command: --default-authentication-plugin=mysql_native_password
+    command: --mysql-native-password=ON
     environment:
       # 请修改为自己的密码
       MYSQL_ROOT_PASSWORD: 123456
