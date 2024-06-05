@@ -68,7 +68,7 @@ docker run -d \
   -e MYSQL_DATABASE='wewe-rss' \
   -v db_data:/var/lib/mysql \
   --network wewe-rss \
-  mysql:latest --default-authentication-plugin=mysql_native_password
+  mysql:latest --mysql-native-password=ON
 ```
 
 3. 启动 Server
