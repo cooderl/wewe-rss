@@ -303,4 +303,15 @@ export class FeedsService {
       };
     });
   }
+
+  async updateFeed(id: string) {
+    try {
+      await this.trpcService.refreshMpArticlesAndUpdateFeed(id);
+    } catch (err) {
+      this.logger.error('updateFeed error', err);
+    } finally {
+      // wait 30s for next feed
+      await new Promise((resolve) => setTimeout(resolve, 30 * 1e3));
+    }
+  }
 }

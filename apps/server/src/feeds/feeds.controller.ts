@@ -55,9 +55,15 @@ export class FeedsController {
     @Query('mode') mode: string,
     @Query('title_include') title_include: string,
     @Query('title_exclude') title_exclude: string,
+    @Query('update') update: boolean = false,
   ) {
     const [id, type] = feed.split('.');
     this.logger.log('getFeed: ', id);
+
+    if(update) {
+      this.feedsService.updateFeed(id);
+    }
+
     const { content, mimeType } = await this.feedsService.handleGenerateFeed({
       id,
       type,
