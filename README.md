@@ -19,6 +19,7 @@
 - [x]  所有订阅源导出OPML
 - [x]  支持通过/feeds/all.(json|rss|atom)接口和/feeds/:feed：使用title_include和title_exclude参数对标题进行过滤，使用`|`支持多个关键词的 或 逻辑
 > {{ORIGIN_URL}}/feeds/filter.atom?title_include=张三
+> 
 > {{ORIGIN_URL}}/feeds/MP_WXS_123.json?limit=30&title_include=张三|李四|王五&title_exclude=张三丰|赵六
 - [x]  支持通过/feeds/:feed接口触发单个feedid更新：使用update=true参数（实时返回结果不包含更新后的articles，要获取更新后的articles需去掉update参数再请求一次）
 > {{ORIGIN_URL}}/feeds/MP_WXS_123.rss?update=true
