@@ -98,6 +98,7 @@ export class FeedsService {
 
     const html = dirtyHtml
       .replace(/data-src=/g, 'src=')
+      .replace(/opacity: 0( !important)?;/g, '')
       .replace(/visibility: hidden;/g, '');
 
     const content =
