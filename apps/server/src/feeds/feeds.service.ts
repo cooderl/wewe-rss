@@ -6,7 +6,7 @@ import { feedMimeTypeMap, feedTypes } from '@server/constants';
 import { ConfigService } from '@nestjs/config';
 import { Article, Feed as FeedInfo } from '@prisma/client';
 import { ConfigurationType } from '@server/configuration';
-import { Feed } from 'feed';
+import { Feed, Item } from 'feed';
 import got, { Got } from 'got';
 import { load } from 'cheerio';
 import { minify } from 'html-minifier';
@@ -216,11 +216,15 @@ export class FeedsService {
     type,
     limit,
     mode,
+    title_include,
+    title_exclude,
   }: {
     id?: string;
     type: string;
     limit: number;
     mode?: string;
+    title_include?: string;
+    title_exclude?: string;
   }) {
     if (!feedTypes.includes(type as any)) {
       type = 'atom';
@@ -262,7 +266,18 @@ export class FeedsService {
     }
 
     this.logger.log('handleGenerateFeed articles: ' + articles.length);
-    const feed = await this.renderFeed({ feedInfo, articles, type, mode });
+    let feed = await this.renderFeed({ feedInfo, articles, type, mode });
+
+    if (title_include) {
+      const includes = title_include.split('|');
+      feed.items = feed.items.filter(
+        (i: Item) => includes.some((k) => i.title.includes(k)));
+    }
+    if (title_exclude) {
+      const excludes = title_exclude.split('|');
+      feed.items = feed.items.filter(
+        (i: Item) => !excludes.some((k) => i.title.includes(k)));
+    }
 
     switch (type) {
       case 'rss':
@@ -288,5 +303,16 @@ export class FeedsService {
         updateTime: item.updateTime,
       };
     });
+  }
+
+  async updateFeed(id: string) {
+    try {
+      await this.trpcService.refreshMpArticlesAndUpdateFeed(id);
+    } catch (err) {
+      this.logger.error('updateFeed error', err);
+    } finally {
+      // wait 30s for next feed
+      await new Promise((resolve) => setTimeout(resolve, 30 * 1e3));
+    }
   }
 }
