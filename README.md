@@ -145,6 +145,13 @@ docker run -d \
 3. 执行 `pnpm install && pnpm dev` 即可。⚠️ 注意：此命令仅用于本地开发，不要用于部署！
 4. 前端访问 `http://localhost:5173` ，后端访问 `http://localhost:4000`
 
+## 贡献者
+
+<a href="https://github.com/cooderl/wewe-rss/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=cooderl/wewe-rss" />
+</a>
+
+
 ## 风险声明
 
 为了确保本项目的持久运行，某些接口请求将通过`weread.111965.xyz`进行转发。请放心，该转发服务不会保存任何数据。
