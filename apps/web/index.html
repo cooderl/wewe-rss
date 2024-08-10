@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="" />
+    <link rel="icon" href="{{ iconUrl }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WeWe RSS</title>
     <meta name="description" content="更好的公众号订阅方式" />
@@ -12,12 +12,6 @@
     <script>
       window.__WEWE_RSS_SERVER_ORIGIN_URL__ = '{{ weweRssServerOriginUrl }}';
       window.__WEWE_RSS_ENABLED_AUTH_CODE__ = '{{ enabledAuthCode }}';
-      document.addEventListener('DOMContentLoaded', function() {
-        var icon = document.getElementById('icon');
-        icon.href = icon && window.__WEWE_RSS_SERVER_ORIGIN_URL__ !== ""
-          ? '{{ weweRssServerOriginUrl }}/favicon.ico'
-          : 'https://r2-assets.111965.xyz/wewe-rss.png';
-      });
     </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
