@@ -11,7 +11,7 @@ import {
 import { ThemeSwitcher } from './ThemeSwitcher';
 import { GitHubIcon } from './GitHubIcon';
 import { useLocation } from 'react-router-dom';
-import { appVersion } from '@web/utils/env';
+import { appVersion, serverOriginUrl } from '@web/utils/env';
 import { useEffect, useState } from 'react';
 
 const navbarItemLink = [
@@ -74,7 +74,10 @@ const Nav = () => {
                 width={28}
                 alt="WeWe RSS"
                 className="mr-2"
-                src="https://r2-assets.111965.xyz/wewe-rss.png"
+                src={ serverOriginUrl
+                  ? `${serverOriginUrl}/favicon.ico`
+                  : 'https://r2-assets.111965.xyz/wewe-rss.png'
+                }
               ></Image>
             </Badge>
             <p className="font-bold text-inherit">WeWe RSS</p>
