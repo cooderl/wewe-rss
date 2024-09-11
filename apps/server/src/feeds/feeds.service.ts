@@ -189,9 +189,9 @@ export class FeedsService {
       const mpName = feeds.find((item) => item.id === mpId)?.mpName || '-';
       const published = new Date(publishTime * 1e3);
 
-      let description = '';
+      let content = '';
       if (enableFullText) {
-        description = await this.tryGetContent(id);
+        content = await this.tryGetContent(id);
       }
 
       feed.addItem({
@@ -199,7 +199,7 @@ export class FeedsService {
         title,
         link: link,
         guid: link,
-        description,
+        content,
         date: published,
         image: picUrl,
         author: showAuthor ? [{ name: mpName }] : undefined,
