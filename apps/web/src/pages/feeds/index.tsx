@@ -60,11 +60,11 @@ const Feeds = () => {
   const [currentMpId, setCurrentMpId] = useState(id || '');
 
   const handleConfirm = async () => {
-    console.log("wxsLink", wxsLink)
+    console.log('wxsLink', wxsLink);
     // TODO show operation in progress
-    const wxsLinks = wxsLink.split('\n').filter(link=>link.trim()!=='');
-    for (const link of wxsLinks){
-      console.log('add wxsLink',link)
+    const wxsLinks = wxsLink.split('\n').filter((link) => link.trim() !== '');
+    for (const link of wxsLinks) {
+      console.log('add wxsLink', link);
       const res = await getMpInfo({ wxsLink: link });
       if (res[0]) {
         const item = res[0];
@@ -89,8 +89,6 @@ const Feeds = () => {
     setWxsLink('');
     onClose();
   };
-
-
 
   const isActive = (key: string) => {
     return currentMpId === key;

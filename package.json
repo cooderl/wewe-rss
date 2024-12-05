@@ -18,5 +18,8 @@
     "start:web": "pnpm --filter web start",
     "fmt": "prettier --write .",
     "fmt.check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5"
   }
 }

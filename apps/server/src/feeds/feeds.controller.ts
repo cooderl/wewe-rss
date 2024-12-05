@@ -60,7 +60,7 @@ export class FeedsController {
     const [id, type] = feed.split('.');
     this.logger.log('getFeed: ', id);
 
-    if(update) {
+    if (update) {
       this.feedsService.updateFeed(id);
     }
 

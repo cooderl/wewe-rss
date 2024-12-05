@@ -74,9 +74,10 @@ const Nav = () => {
                 width={28}
                 alt="WeWe RSS"
                 className="mr-2"
-                src={ serverOriginUrl
-                  ? `${serverOriginUrl}/favicon.ico`
-                  : 'https://r2-assets.111965.xyz/wewe-rss.png'
+                src={
+                  serverOriginUrl
+                    ? `${serverOriginUrl}/favicon.ico`
+                    : 'https://r2-assets.111965.xyz/wewe-rss.png'
                 }
               ></Image>
             </Badge>

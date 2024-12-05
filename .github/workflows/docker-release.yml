@@ -6,7 +6,7 @@ on:
     #   - "apps/**"
     #   - "Dockerfile"
     tags:
-      - "v*.*.*"
+      - 'v*.*.*'
 
 concurrency:
   group: docker-release

@@ -274,13 +274,15 @@ export class FeedsService {
 
     if (title_include) {
       const includes = title_include.split('|');
-      feed.items = feed.items.filter(
-        (i: Item) => includes.some((k) => i.title.includes(k)));
+      feed.items = feed.items.filter((i: Item) =>
+        includes.some((k) => i.title.includes(k)),
+      );
     }
     if (title_exclude) {
       const excludes = title_exclude.split('|');
       feed.items = feed.items.filter(
-        (i: Item) => !excludes.some((k) => i.title.includes(k)));
+        (i: Item) => !excludes.some((k) => i.title.includes(k)),
+      );
     }
 
     switch (type) {
