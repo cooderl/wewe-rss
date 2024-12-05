@@ -131,7 +131,7 @@ pnpm run start:server
 
 - `CRON_EXPRESSION` 定时更新订阅源Cron表达式，默认为 `35 5,17 * * *`。
 
-- `PLATFORM_URL` 默认为 `https://weread.111965.xyz`, **如果在国内DNS解析导致请求失败可以使用 `https://weread-v.111965.xyz` **。
+- `PLATFORM_URL` 默认为 `https://weread.111965.xyz`, **如果在国内DNS解析问题可以使用 `https://weread-v.111965.xyz`加速访问** 。
 
 ## 支持钉钉通知
 
@@ -180,3 +180,7 @@ pnpm run start:server
 ## License
 
 [MIT](https://raw.githubusercontent.com/cooderl/wewe-rss/main/LICENSE) @cooderl
+
+## Donation
+
+如果你有 $POWER，快来打赏我吧😄  [0x7d096901db65f84dc798252dbbdbcba8852ad6e1](https://scan.rss3.io/address/0x7d096901db65f84dc798252dbbdbcba8852ad6e1)
