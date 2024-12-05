@@ -131,6 +131,8 @@ pnpm run start:server
 
 - `CRON_EXPRESSION` 定时更新订阅源Cron表达式，默认为 `35 5,17 * * *`。
 
+- `PLATFORM_URL` 默认为 `https://weread.111965.xyz`, **如果在国内DNS解析导致请求失败可以使用 `https://weread-v.111965.xyz` **。
+
 ## 支持钉钉通知
 
 进入wewe-rss-dingtalk目录按照README.md指引部署
