@@ -12,3 +12,5 @@ export const feedMimeTypeMap = {
   atom: 'application/atom+xml; charset=utf-8',
   json: 'application/feed+json; charset=utf-8',
 } as const;
+
+export const defaultCount = 20;

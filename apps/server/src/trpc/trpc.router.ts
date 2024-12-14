@@ -259,6 +259,20 @@ export class TrpcRouter {
         return this.trpcService.isRefreshAllMpArticlesRunning;
       },
     ),
+    getHistoryArticles: this.trpcService.protectedProcedure
+      .input(
+        z.object({
+          mpId: z.string().optional(),
+        }),
+      )
+      .mutation(async ({ input: { mpId = '' } }) => {
+        this.trpcService.getHistoryMpArticles(mpId);
+      }),
+    getInProgressHistoryMp: this.trpcService.protectedProcedure.query(
+      async () => {
+        return this.trpcService.inProgressHistoryMp;
+      },
+    ),
   });
 
   articleRouter = this.trpcService.router({

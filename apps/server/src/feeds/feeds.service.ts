@@ -239,6 +239,7 @@ export class FeedsService {
         status: 1,
         syncTime: 0,
         updateTime: Math.floor(Date.now() / 1e3),
+        hasHistory: -1,
         createdAt: new Date(),
         updatedAt: new Date(),
       };

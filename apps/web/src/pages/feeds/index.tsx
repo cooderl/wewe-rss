@@ -48,6 +48,18 @@ const Feeds = () => {
     trpc.feed.add.useMutation({});
   const { mutateAsync: refreshMpArticles, isLoading: isGetArticlesLoading } =
     trpc.feed.refreshArticles.useMutation();
+  const {
+    mutateAsync: getHistoryArticles,
+    isLoading: isGetHistoryArticlesLoading,
+  } = trpc.feed.getHistoryArticles.useMutation();
+
+  const { data: inProgressHistoryMp, refetch: refetchInProgressHistoryMp } =
+    trpc.feed.getInProgressHistoryMp.useQuery(undefined, {
+      refetchOnWindowFocus: true,
+      refetchInterval: 10 * 1e3,
+      refetchOnMount: true,
+      refetchOnReconnect: true,
+    });
 
   const { data: isRefreshAllMpArticlesRunning } =
     trpc.feed.isRefreshAllMpArticlesRunning.useQuery();
@@ -220,6 +232,53 @@ const Feeds = () => {
                   </Link>
                 </Tooltip>
                 <Divider orientation="vertical" />
+                {currentMpInfo.hasHistory === 1 && (
+                  <>
+                    <Tooltip
+                      content={
+                        inProgressHistoryMp?.id === currentMpInfo.id
+                          ? `正在获取第${inProgressHistoryMp.page}页...`
+                          : `历史文章需要分批次拉取，请耐心等候，频繁调用可能会导致一段时间内不可用`
+                      }
+                      color={
+                        inProgressHistoryMp?.id === currentMpInfo.id
+                          ? 'primary'
+                          : 'danger'
+                      }
+                    >
+                      <Link
+                        size="sm"
+                        href="#"
+                        isDisabled={
+                          (inProgressHistoryMp?.id !== currentMpInfo.id &&
+                            isGetHistoryArticlesLoading) ||
+                          isGetArticlesLoading
+                        }
+                        onClick={async (ev) => {
+                          ev.preventDefault();
+                          ev.stopPropagation();
+
+                          if (inProgressHistoryMp?.id === currentMpInfo.id) {
+                            await getHistoryArticles({
+                              mpId: '',
+                            });
+                          } else {
+                            await getHistoryArticles({
+                              mpId: currentMpInfo.id,
+                            });
+                          }
+
+                          await refetchInProgressHistoryMp();
+                        }}
+                      >
+                        {inProgressHistoryMp?.id === currentMpInfo.id
+                          ? `停止获取历史文章`
+                          : `获取历史文章`}
+                      </Link>
+                    </Tooltip>
+                    <Divider orientation="vertical" />
+                  </>
+                )}
 
                 <Tooltip content="启用服务端定时更新">
                   <div>

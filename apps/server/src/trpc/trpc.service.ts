@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from '@server/configuration';
-import { statusMap } from '@server/constants';
+import { defaultCount, statusMap } from '@server/constants';
 import { PrismaService } from '@server/prisma/prisma.service';
 import { TRPCError, initTRPC } from '@trpc/server';
 import Axios, { AxiosInstance } from 'axios';
@@ -126,7 +126,7 @@ export class TrpcService {
     return account[Math.floor(Math.random() * account.length)];
   }
 
-  async getMpArticles(mpId: string, retryCount = 3) {
+  async getMpArticles(mpId: string, page = 1, retryCount = 3) {
     const account = await this.getAvailableAccount();
 
     try {
@@ -143,25 +143,30 @@ export class TrpcService {
             xid: account.id,
             Authorization: `Bearer ${account.token}`,
           },
+          params: {
+            page,
+          },
         })
         .then((res) => res.data)
         .then((res) => {
-          this.logger.log(`getMpArticles(${mpId}): ${res.length} articles`);
+          this.logger.log(
+            `getMpArticles(${mpId}) page: ${page} articles: ${res.length}`,
+          );
           return res;
         });
       return res;
     } catch (err) {
       this.logger.error(`retry(${4 - retryCount}) getMpArticles  error: `, err);
       if (retryCount > 0) {
-        return this.getMpArticles(mpId, retryCount - 1);
+        return this.getMpArticles(mpId, page, retryCount - 1);
       } else {
         throw err;
       }
     }
   }
 
-  async refreshMpArticlesAndUpdateFeed(mpId: string) {
-    const articles = await this.getMpArticles(mpId);
+  async refreshMpArticlesAndUpdateFeed(mpId: string, page = 1) {
+    const articles = await this.getMpArticles(mpId, page);
 
     if (articles.length > 0) {
       let results;
@@ -193,15 +198,83 @@ export class TrpcService {
         });
       }
 
-      this.logger.debug('refreshMpArticlesAndUpdateFeed results: ', results);
+      this.logger.debug(
+        `refreshMpArticlesAndUpdateFeed create results: ${JSON.stringify(results)}`,
+      );
     }
+
+    // 如果文章数量小于 defaultCount，则认为没有更多历史文章
+    const hasHistory = articles.length < defaultCount ? 0 : 1;
 
     await this.prismaService.feed.update({
       where: { id: mpId },
       data: {
         syncTime: Math.floor(Date.now() / 1e3),
+        hasHistory,
       },
     });
+
+    return { hasHistory };
+  }
+
+  inProgressHistoryMp = {
+    id: '',
+    page: 1,
+  };
+
+  async getHistoryMpArticles(mpId: string) {
+    if (this.inProgressHistoryMp.id === mpId) {
+      this.logger.log(`getHistoryMpArticles(${mpId}) is running`);
+      return;
+    }
+
+    this.inProgressHistoryMp = {
+      id: mpId,
+      page: 1,
+    };
+
+    if (!this.inProgressHistoryMp.id) {
+      return;
+    }
+
+    try {
+      const feed = await this.prismaService.feed.findFirstOrThrow({
+        where: {
+          id: mpId,
+        },
+      });
+
+      // 如果完整同步过历史文章，则直接返回
+      if (feed.hasHistory === 0) {
+        this.logger.log(`getHistoryMpArticles(${mpId}) has no history`);
+        return;
+      }
+
+      const total = await this.prismaService.article.count({
+        where: {
+          mpId,
+        },
+      });
+      this.inProgressHistoryMp.page = Math.ceil(total / defaultCount);
+
+      // 最多尝试一千次
+      let i = 1e3;
+      while (i-- > 0) {
+        const { hasHistory } = await this.refreshMpArticlesAndUpdateFeed(
+          mpId,
+          this.inProgressHistoryMp.page,
+        );
+        if (hasHistory < 1 || this.inProgressHistoryMp.id !== mpId) {
+          break;
+        }
+        this.inProgressHistoryMp.page++;
+      }
+    } finally {
+      this.inProgressHistoryMp = {
+        id: '',
+        page: 1,
+      };
+    }
   }
 
   isRefreshAllMpArticlesRunning = false;
