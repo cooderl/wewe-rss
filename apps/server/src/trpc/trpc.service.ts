@@ -31,6 +31,7 @@ export class TrpcService {
   router = this.trpc.router;
   mergeRouters = this.trpc.mergeRouters;
   request: AxiosInstance;
+  updateDelayTime = 60;
 
   private readonly logger = new Logger(this.constructor.name);
 
@@ -40,6 +41,11 @@ export class TrpcService {
   ) {
     const { url } =
       this.configService.get<ConfigurationType['platform']>('platform')!;
+    this.updateDelayTime =
+      this.configService.get<ConfigurationType['feed']>(
+        'feed',
+      )!.updateDelayTime;
+
     this.request = Axios.create({ baseURL: url, timeout: 15 * 1e3 });
 
     this.request.interceptors.response.use(
@@ -268,6 +274,10 @@ export class TrpcService {
           break;
         }
         this.inProgressHistoryMp.page++;
+
+        await new Promise((resolve) =>
+          setTimeout(resolve, this.updateDelayTime * 1e3),
+        );
       }
     } finally {
       this.inProgressHistoryMp = {
@@ -289,7 +299,10 @@ export class TrpcService {
     try {
       for (const { id } of mps) {
         await this.refreshMpArticlesAndUpdateFeed(id);
-        await new Promise((resolve) => setTimeout(resolve, 10 * 1e3));
+
+        await new Promise((resolve) =>
+          setTimeout(resolve, this.updateDelayTime * 1e3),
+        );
       }
     } finally {
       this.isRefreshAllMpArticlesRunning = false;

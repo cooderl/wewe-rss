@@ -131,6 +131,8 @@ pnpm run start:server
 
 - `CRON_EXPRESSION` 定时更新订阅源Cron表达式，默认为 `35 5,17 * * *`。
 
+- `UPDATE_DELAY_TIME` 连续更新延迟时间，默认为 `60s`。
+
 - `PLATFORM_URL` 默认为 `https://weread.111965.xyz`, **如果在国内DNS解析问题可以使用 `https://weread-v.111965.xyz`加速访问** 。
 
 ## 支持钉钉通知

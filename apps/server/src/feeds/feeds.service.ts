@@ -76,10 +76,19 @@ export class FeedsService {
     });
     this.logger.debug('feeds length:' + feeds.length);
 
+    const updateDelayTime =
+      this.configService.get<ConfigurationType['feed']>(
+        'feed',
+      )!.updateDelayTime;
+
     for (const feed of feeds) {
       this.logger.debug('feed', feed.id);
       try {
         await this.trpcService.refreshMpArticlesAndUpdateFeed(feed.id);
+
+        await new Promise((resolve) =>
+          setTimeout(resolve, updateDelayTime * 1e3),
+        );
       } catch (err) {
         this.logger.error('handleUpdateFeedsCron error', err);
       } finally {
