@@ -17,6 +17,7 @@ const configuration = () => {
 
   const updateDelayTime = parseInt(`${process.env.UPDATE_DELAY_TIME} || 60`);
 
+  const enableCleanHtml = process.env.ENABLE_CLEAN_HTML === 'true';
   return {
     server: { isProd, port, host },
     throttler: { maxRequestPerMinute },
@@ -26,6 +27,7 @@ const configuration = () => {
       originUrl,
       mode: feedMode,
       updateDelayTime,
+      enableCleanHtml,
     },
     database: {
       type: databaseType,

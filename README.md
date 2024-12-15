@@ -133,6 +133,8 @@ pnpm run start:server
 
 - `UPDATE_DELAY_TIME` 连续更新延迟时间，默认为 `60s`。
 
+- `ENABLE_CLEAN_HTML` 是否开启正文html清理，默认为 `false`。
+
 - `PLATFORM_URL` 默认为 `https://weread.111965.xyz`, **如果在国内DNS解析问题可以使用 `https://weread-v.111965.xyz`加速访问** 。
 
 ## 支持钉钉通知

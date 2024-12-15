@@ -124,9 +124,14 @@ export class FeedsService {
 
   async getHtmlByUrl(url: string) {
     const html = await this.request(url, { responseType: 'text' }).text();
-    const result = await this.cleanHtml(html);
+    if (
+      this.configService.get<ConfigurationType['feed']>('feed')!.enableCleanHtml
+    ) {
+      const result = await this.cleanHtml(html);
+      return result;
+    }
 
-    return result;
+    return html;
   }
 
   async tryGetContent(id: string) {
