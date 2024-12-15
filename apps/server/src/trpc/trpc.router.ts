@@ -22,12 +22,12 @@ export class TrpcRouter {
     list: this.trpcService.protectedProcedure
       .input(
         z.object({
-          limit: z.number().min(1).max(500).nullish(),
+          limit: z.number().min(1).max(1000).nullish(),
           cursor: z.string().nullish(),
         }),
       )
       .query(async ({ input }) => {
-        const limit = input.limit ?? 500;
+        const limit = input.limit ?? 1000;
         const { cursor } = input;
 
         const items = await this.prismaService.account.findMany({
@@ -136,12 +136,12 @@ export class TrpcRouter {
     list: this.trpcService.protectedProcedure
       .input(
         z.object({
-          limit: z.number().min(1).max(500).nullish(),
+          limit: z.number().min(1).max(1000).nullish(),
           cursor: z.string().nullish(),
         }),
       )
       .query(async ({ input }) => {
-        const limit = input.limit ?? 500;
+        const limit = input.limit ?? 1000;
         const { cursor } = input;
 
         const items = await this.prismaService.feed.findMany({
@@ -279,13 +279,13 @@ export class TrpcRouter {
     list: this.trpcService.protectedProcedure
       .input(
         z.object({
-          limit: z.number().min(1).max(500).nullish(),
+          limit: z.number().min(1).max(1000).nullish(),
           cursor: z.string().nullish(),
           mpId: z.string().nullish(),
         }),
       )
       .query(async ({ input }) => {
-        const limit = input.limit ?? 500;
+        const limit = input.limit ?? 1000;
         const { cursor, mpId } = input;
 
         const items = await this.prismaService.article.findMany({
