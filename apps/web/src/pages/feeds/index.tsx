@@ -323,7 +323,13 @@ const Feeds = () => {
                 </Tooltip>
 
                 <Divider orientation="vertical" />
-                <Tooltip content={<div>可添加.atom/.rss/.json格式输出</div>}>
+                <Tooltip
+                  content={
+                    <div>
+                      可添加.atom/.rss/.json格式输出, limit=20&page=1控制分页
+                    </div>
+                  }
+                >
                   <Link
                     size="sm"
                     showAnchorIcon

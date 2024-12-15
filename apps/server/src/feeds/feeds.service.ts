@@ -229,6 +229,7 @@ export class FeedsService {
     id,
     type,
     limit,
+    page,
     mode,
     title_include,
     title_exclude,
@@ -236,6 +237,7 @@ export class FeedsService {
     id?: string;
     type: string;
     limit: number;
+    page: number;
     mode?: string;
     title_include?: string;
     title_exclude?: string;
@@ -259,11 +261,13 @@ export class FeedsService {
         where: { mpId: id },
         orderBy: { publishTime: 'desc' },
         take: limit,
+        skip: (page - 1) * limit,
       });
     } else {
       articles = await this.prismaService.article.findMany({
         orderBy: { publishTime: 'desc' },
         take: limit,
+        skip: (page - 1) * limit,
       });
 
       const { originUrl } =
@@ -285,7 +289,7 @@ export class FeedsService {
     }
 
     this.logger.log('handleGenerateFeed articles: ' + articles.length);
-    let feed = await this.renderFeed({ feedInfo, articles, type, mode });
+    const feed = await this.renderFeed({ feedInfo, articles, type, mode });
 
     if (title_include) {
       const includes = title_include.split('|');
