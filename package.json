@@ -6,7 +6,7 @@
   "description": "",
   "main": "index.js",
   "engines": {
-    "node": ">=18",
+    "node": ">=20.9.0",
     "pnpm": ">=8.6.1",
     "vscode": ">=1.79"
   },
