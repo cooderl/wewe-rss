@@ -266,11 +266,20 @@ export class TrpcService {
       // 最多尝试一千次
       let i = 1e3;
       while (i-- > 0) {
+        if (this.inProgressHistoryMp.id !== mpId) {
+          this.logger.log(
+            `getHistoryMpArticles(${mpId}) is not running, break`,
+          );
+          break;
+        }
         const { hasHistory } = await this.refreshMpArticlesAndUpdateFeed(
           mpId,
           this.inProgressHistoryMp.page,
         );
-        if (hasHistory < 1 || this.inProgressHistoryMp.id !== mpId) {
+        if (hasHistory < 1) {
+          this.logger.log(
+            `getHistoryMpArticles(${mpId}) has no history, break`,
+          );
           break;
         }
         this.inProgressHistoryMp.page++;
