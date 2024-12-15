@@ -250,8 +250,10 @@ const Feeds = () => {
                         size="sm"
                         href="#"
                         isDisabled={
-                          (inProgressHistoryMp?.id !== currentMpInfo.id &&
-                            isGetHistoryArticlesLoading) ||
+                          (inProgressHistoryMp?.id
+                            ? inProgressHistoryMp?.id !== currentMpInfo.id
+                            : false) ||
+                          isGetHistoryArticlesLoading ||
                           isGetArticlesLoading
                         }
                         onClick={async (ev) => {
