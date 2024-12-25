@@ -1,0 +1,142 @@
+name: Build WeWeRSS images and push image to docker hub
+on:
+  workflow_dispatch:
+  push:
+    # paths:
+    #   - "apps/**"
+    #   - "Dockerfile"
+    tags:
+      - 'v*.*.*'
+
+concurrency:
+  group: docker-release
+  cancel-in-progress: true
+
+jobs:
+  check-env:
+    permissions:
+      contents: none
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      check-docker: ${{ steps.check-docker.outputs.defined }}
+    steps:
+      - id: check-docker
+        env:
+          DOCKER_HUB_NAME: ${{ secrets.DOCKER_HUB_NAME }}
+        if: ${{ env.DOCKER_HUB_NAME != '' }}
+        run: echo "defined=true" >> $GITHUB_OUTPUT
+
+  release-images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      packages: write
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_NAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata (sqlite)
+        id: meta-sqlite
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ secrets.DOCKER_HUB_NAME }}/wewe-rss-sqlite
+            ghcr.io/cooderl/wewe-rss-sqlite
+          tags: |
+            type=raw,value=latest,enable=true
+            type=raw,value=${{ github.ref_name }},enable=true
+          flavor: latest=false
+
+      - name: Build and push Docker image (sqlite)
+        id: build-and-push-sqlite
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta-sqlite.outputs.tags }}
+          labels: ${{ steps.meta-sqlite.outputs.labels }}
+          target: app-sqlite
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha,scope=docker-release
+          cache-to: type=gha,mode=max,scope=docker-release
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ secrets.DOCKER_HUB_NAME }}/wewe-rss
+            ghcr.io/cooderl/wewe-rss
+          tags: |
+            type=raw,value=latest,enable=true
+            type=raw,value=${{ github.ref_name }},enable=true
+          flavor: latest=false
+
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          target: app
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha,scope=docker-release
+          cache-to: type=gha,mode=max,scope=docker-release
+
+      - name: Set env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+      - name: Create a Release
+        uses: elgohr/Github-Release-Action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          title: ${{ env.RELEASE_VERSION }}
+
+  description:
+    runs-on: ubuntu-latest
+    needs: check-env
+    if: needs.check-env.outputs.check-docker == 'true'
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Docker Hub Description(sqlite)
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ secrets.DOCKER_HUB_NAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+          repository: ${{ secrets.DOCKER_HUB_NAME }}/wewe-rss-sqlite
+
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ secrets.DOCKER_HUB_NAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+          repository: ${{ secrets.DOCKER_HUB_NAME }}/wewe-rss
