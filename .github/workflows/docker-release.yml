@@ -64,8 +64,8 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ secrets.DOCKER_HUB_NAME }}/wewe-rss-sqlite
-            ghcr.io/cooderl/wewe-rss-sqlite
+            ${{ secrets.DOCKER_HUB_NAME }}/shijier-learn-sqlite
+            ghcr.io/cooderl/shijier-learn-sqlite
           tags: |
             type=raw,value=latest,enable=true
             type=raw,value=${{ github.ref_name }},enable=true
@@ -89,8 +89,8 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ secrets.DOCKER_HUB_NAME }}/wewe-rss
-            ghcr.io/cooderl/wewe-rss
+            ${{ secrets.DOCKER_HUB_NAME }}/shijier-learn
+            ghcr.io/cooderl/shijier-learn
           tags: |
             type=raw,value=latest,enable=true
             type=raw,value=${{ github.ref_name }},enable=true
@@ -132,11 +132,11 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_NAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-          repository: ${{ secrets.DOCKER_HUB_NAME }}/wewe-rss-sqlite
+          repository: ${{ secrets.DOCKER_HUB_NAME }}/shijier-learn-sqlite
 
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v4
         with:
           username: ${{ secrets.DOCKER_HUB_NAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-          repository: ${{ secrets.DOCKER_HUB_NAME }}/wewe-rss
+          repository: ${{ secrets.DOCKER_HUB_NAME }}/shijier-learn
