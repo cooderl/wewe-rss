@@ -49,29 +49,6 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_NAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
-      # - name: Extract Docker metadata (sqlite)
-      #   id: meta-sqlite
-      #   uses: docker/metadata-action@v5
-      #   with:
-      #     images: ${{ secrets.DOCKER_HUB_NAME }}/shie-learn
-      #     tags: |
-      #       type=raw,value=latest,enable=true
-      #       type=raw,value=${{ github.ref_name }},enable=true
-      #     flavor: latest=false
-
-      # - name: Build and push Docker image (sqlite)
-      #   id: build-and-push-sqlite
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     context: .
-      #     push: true
-      #     tags: ${{ steps.meta-sqlite.outputs.tags }}
-      #     labels: ${{ steps.meta-sqlite.outputs.labels }}
-      #     target: app-sqlite
-      #     platforms: linux/amd64,linux/arm64
-      #     cache-from: type=gha,scope=docker-release
-      #     cache-to: type=gha,mode=max,scope=docker-release
-
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v5
@@ -113,16 +90,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Docker Hub Description(sqlite)
-        uses: peter-evans/dockerhub-description@v4
-        with:
-          username: ${{ secrets.DOCKER_HUB_NAME }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-          repository: ${{ secrets.DOCKER_HUB_NAME }}/shie-learn
 
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v4
         with:
           username: ${{ secrets.DOCKER_HUB_NAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-          repository: ${{ secrets.DOCKER_HUB_NAME }}/wewe-rss
+          repository: ${{ secrets.DOCKER_HUB_NAME }}/shie-learn
