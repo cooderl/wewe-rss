@@ -19,14 +19,15 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
 
-  const { host, isProd, port } =
+  const { host, isProd, port, baseUrl } =
     configService.get<ConfigurationType['server']>('server')!;
-
+  const assetsPrefix = `${baseUrl}dash/assets/`;
+  app.setGlobalPrefix(baseUrl);
   app.use(json({ limit: '10mb' }));
   app.use(urlencoded({ extended: true, limit: '10mb' }));
 
   app.useStaticAssets(join(__dirname, '..', 'client', 'assets'), {
-    prefix: '/dash/assets/',
+    prefix: assetsPrefix,
   });
   app.setBaseViewsDir(join(__dirname, '..', 'client'));
   app.setViewEngine('hbs');
