@@ -8,7 +8,7 @@ import ThemeProvider from './provider/theme';
 
 function App() {
   return (
-    <BrowserRouter basename="/dash">
+    <BrowserRouter basename={`${import.meta.env.VITE_WEWERSS_BASE_URL}/dash`}>
       <ThemeProvider>
         <TrpcProvider>
           <Routes>

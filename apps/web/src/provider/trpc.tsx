@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { isTRPCClientError, trpc } from '../utils/trpc';
 import { getAuthCode, setAuthCode } from '../utils/auth';
-import { enabledAuthCode, serverOriginUrl } from '../utils/env';
+import { enabledAuthCode, serverOriginUrl, baseUrl } from '../utils/env';
 
 export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
   children,

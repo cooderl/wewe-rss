@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
@@ -6,7 +6,7 @@ import { readFileSync } from 'fs';
 const projectRootDir = resolve(__dirname);
 
 const isProd = process.env.NODE_ENV === 'production';
-
+const baseUrl = loadEnv('mode', process.cwd()).VITE_WEWERSS_BASE_URL || '';
 console.log('process.env.NODE_ENV: ', process.env.NODE_ENV);
 
 const packageJson = JSON.parse(
@@ -15,7 +15,7 @@ const packageJson = JSON.parse(
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/dash',
+  base: `${baseUrl}/dash`,
   define: {
     __APP_VERSION__: JSON.stringify(packageJson.version),
   },
