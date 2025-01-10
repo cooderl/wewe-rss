@@ -114,6 +114,13 @@ pnpm run start:server
 
 ```
 
+#### docker build
+``` shell
+# 构建sqlite版本镜像
+docker build --target app-sqlite  -t wewerss .
+# 构建mysql版本镜像
+docker build --target app  -t wewerss .
+```
 ## 环境变量
 
 - `DATABASE_URL` （**必填项**）数据库地址，例如 `mysql://root:123456@127.0.0.1:3306/wewe-rss`。

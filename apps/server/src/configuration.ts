@@ -2,7 +2,7 @@ const configuration = () => {
   const isProd = process.env.NODE_ENV === 'production';
   const port = process.env.PORT || 4000;
   const host = process.env.HOST || '0.0.0.0';
-  const baseUrl = process.env.WEWERSS_BASE_URL || '/';
+  const baseUrl = process.env.WEWERSS_BASE_URL || '';
 
   const maxRequestPerMinute = parseInt(
     `${process.env.MAX_REQUEST_PER_MINUTE}|| 60`,

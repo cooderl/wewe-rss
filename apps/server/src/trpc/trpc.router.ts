@@ -425,8 +425,10 @@ export class TrpcRouter {
   });
 
   async applyMiddleware(app: INestApplication) {
+    const { host, isProd, port, baseUrl } =
+      this.configService.get<ConfigurationType['server']>('server')!;
     app.use(
-      `/trpc`,
+      `${baseUrl}/trpc`,
       trpcExpress.createExpressMiddleware({
         router: this.appRouter,
         createContext: ({ req }) => {

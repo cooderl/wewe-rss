@@ -9,4 +9,4 @@ export const appVersion = __APP_VERSION__;
 export const enabledAuthCode =
   window.__WEWE_RSS_ENABLED_AUTH_CODE__ === false ? false : true;
 
-export const baseUrl = import.meta.env.VITE_WEWERSS_BASE_URL || '/';
+export const baseUrl = import.meta.env.VITE_WEWERSS_BASE_URL || '';

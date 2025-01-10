@@ -81,7 +81,7 @@ export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
           enabled: () => true,
         }),
         httpBatchLink({
-          url: serverOriginUrl + baseUrl + 'trpc',
+          url: serverOriginUrl + '/trpc',
           async headers() {
             const token = getAuthCode();
 

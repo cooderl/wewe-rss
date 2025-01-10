@@ -21,7 +21,7 @@ async function bootstrap() {
 
   const { host, isProd, port, baseUrl } =
     configService.get<ConfigurationType['server']>('server')!;
-  const assetsPrefix = `${baseUrl}dash/assets/`;
+  const assetsPrefix = `${baseUrl}/dash/assets/`;
   app.setGlobalPrefix(baseUrl);
   app.use(json({ limit: '10mb' }));
   app.use(urlencoded({ extended: true, limit: '10mb' }));
