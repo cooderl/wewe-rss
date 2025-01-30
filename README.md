@@ -33,7 +33,7 @@
 
 [![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/DI9BBD)
 
-[Railway](https://railway.app/)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/template/9lIYng?referralCode=Q8Ak1m)
 
 [Hugging Face部署参考](https://github.com/cooderl/wewe-rss/issues/32)
 
