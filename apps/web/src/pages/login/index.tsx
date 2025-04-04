@@ -14,7 +14,7 @@ const LoginPage = () => {
         value={codeValue}
         onValueChange={setCodeValue}
         label="AuthCode"
-        placeholder="请输入auth code"
+        placeholder="请输入 Auth Code"
       />
       <Button
         color="primary"
