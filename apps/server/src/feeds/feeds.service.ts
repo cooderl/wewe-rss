@@ -154,11 +154,13 @@ export class FeedsService {
     feedInfo,
     articles,
     mode,
+    text_only,
   }: {
     type: string;
     feedInfo: FeedInfo;
     articles: Article[];
     mode?: string;
+    text_only?: boolean;
   }) {
     const { originUrl, mode: globalMode } =
       this.configService.get<ConfigurationType['feed']>('feed')!;
@@ -203,21 +205,64 @@ export class FeedsService {
       const mpName = feeds.find((item) => item.id === mpId)?.mpName || '-';
       const published = new Date(publishTime * 1e3);
 
-      let content = '';
+      let content_html = '';
+      let content_text = '';
+      
       if (enableFullText) {
-        content = await this.tryGetContent(id);
+        content_html = await this.tryGetContent(id);
+        
+        // 如果启用了纯文本模式，将HTML转换为纯文本
+        if (text_only && content_html) {
+          const cheerio = require('cheerio');
+          // 去除样式标签
+          content_html = content_html.replace(/<style[\s\S]*?<\/style>/gi, '');
+          
+          const $ = cheerio.load(content_html);
+          
+          // 处理<br>标签为换行符
+          $('br').replaceWith('\n');
+          
+          // 处理<p>标签为段落（添加双换行）
+          $('p').each(function() {
+            $(this).replaceWith($(this).text() + '\n\n');
+          });
+          
+          // 获取纯文本内容
+          content_text = $.text();
+          
+          // 去除多余的空白字符
+          content_text = content_text.replace(/\s+/g, ' ').trim();
+          
+          // 恢复换行符
+          content_text = content_text.replace(/ \n /g, '\n');
+        }
       }
 
-      feed.addItem({
+      // 创建基本的feed项
+      const feedItem = {
         id,
         title,
         link: link,
         guid: link,
-        content,
         date: published,
         image: picUrl,
         author: showAuthor ? [{ name: mpName }] : undefined,
-      });
+      };
+      
+      // 根据 text_only 参数决定使用HTML内容还是纯文本内容
+      if (text_only) {
+        // 如果启用了纯文本模式，使用纯文本内容
+        if (content_text) {
+          feedItem['content'] = content_text;
+        }
+      } else {
+        // 如果没有启用纯文本模式，使用HTML内容
+        if (content_html) {
+          feedItem['content'] = content_html;
+        }
+      }
+      
+      feed.addItem(feedItem);
     };
 
     await pMap(articles, mapper, { concurrency: 2, stopOnError: false });
@@ -233,6 +278,7 @@ export class FeedsService {
     mode,
     title_include,
     title_exclude,
+    text_only,
   }: {
     id?: string;
     type: string;
@@ -241,6 +287,7 @@ export class FeedsService {
     mode?: string;
     title_include?: string;
     title_exclude?: string;
+    text_only?: boolean;
   }) {
     if (!feedTypes.includes(type as any)) {
       type = 'atom';
@@ -289,7 +336,7 @@ export class FeedsService {
     }
 
     this.logger.log('handleGenerateFeed articles: ' + articles.length);
-    const feed = await this.renderFeed({ feedInfo, articles, type, mode });
+    const feed = await this.renderFeed({ feedInfo, articles, type, mode, text_only });
 
     if (title_include) {
       const includes = title_include.split('|');

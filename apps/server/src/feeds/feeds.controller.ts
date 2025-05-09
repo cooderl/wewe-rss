@@ -32,6 +32,7 @@ export class FeedsController {
     @Query('mode') mode: string,
     @Query('title_include') title_include: string,
     @Query('title_exclude') title_exclude: string,
+    @Query('text_only') text_only: boolean = false,
   ) {
     const path = req.path;
     const type = path.split('.').pop() || '';
@@ -43,6 +44,7 @@ export class FeedsController {
       mode,
       title_include,
       title_exclude,
+      text_only,
     });
 
     res.setHeader('Content-Type', mimeType);
@@ -59,6 +61,7 @@ export class FeedsController {
     @Query('title_include') title_include: string,
     @Query('title_exclude') title_exclude: string,
     @Query('update') update: boolean = false,
+    @Query('text_only') text_only: boolean = false,
   ) {
     const [id, type] = feed.split('.');
     this.logger.log('getFeed: ', id);
@@ -75,6 +78,7 @@ export class FeedsController {
       mode,
       title_include,
       title_exclude,
+      text_only,
     });
 
     res.setHeader('Content-Type', mimeType);

@@ -26,6 +26,12 @@
   {{ORIGIN_URL}}/feeds/MP_WXS_123.json?limit=30&title_include=张三|李四|王五&title_exclude=张三丰|赵六
   ```
 
+- **纯文本输出**：支持通过`text_only=true`参数获取纯文本内容而非HTML格式
+  ```
+  {{ORIGIN_URL}}/feeds/MP_WXS_123.json?text_only=true
+  {{ORIGIN_URL}}/feeds/all.rss?title_include=张三&text_only=true
+  ```
+
 - **手动更新**：支持通过`/feeds/:feed`接口触发单个feedid更新
   ```
   {{ORIGIN_URL}}/feeds/MP_WXS_123.rss?update=true
