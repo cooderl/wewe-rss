@@ -33,6 +33,7 @@ export class FeedsController {
     @Query('title_include') title_include: string,
     @Query('title_exclude') title_exclude: string,
     @Query('text_only') text_only: boolean = false,
+    @Query('date', new ParseIntPipe({ optional: true })) date?: number,
   ) {
     const path = req.path;
     const type = path.split('.').pop() || '';
@@ -45,26 +46,32 @@ export class FeedsController {
       title_include,
       title_exclude,
       text_only,
+      date,
     });
 
     res.setHeader('Content-Type', mimeType);
     res.send(content);
   }
 
-  @Get('/:feed')
+  @Get('/:feed.(json|rss|atom)')
   async getFeed(
+    @Request() req: Req,
     @Response() res: Res,
     @Param('feed') feed: string,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     @Query('mode') mode: string,
+    @Query('update') update: boolean = false,
     @Query('title_include') title_include: string,
     @Query('title_exclude') title_exclude: string,
-    @Query('update') update: boolean = false,
     @Query('text_only') text_only: boolean = false,
+    @Query('date', new ParseIntPipe({ optional: true })) date?: number,
   ) {
-    const [id, type] = feed.split('.');
-    this.logger.log('getFeed: ', id);
+    // 从路径中提取类型，而不是从 feed 参数中分割
+    const path = req.path;
+    const type = path.split('.').pop() || '';
+    const id = feed; // feed 参数已经是没有扩展名的部分
+    this.logger.log('getFeed: ', id, 'type: ', type);
 
     if (update) {
       this.feedsService.updateFeed(id);
@@ -79,6 +86,7 @@ export class FeedsController {
       title_include,
       title_exclude,
       text_only,
+      date,
     });
 
     res.setHeader('Content-Type', mimeType);

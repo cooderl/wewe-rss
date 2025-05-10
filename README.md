@@ -32,6 +32,13 @@
   {{ORIGIN_URL}}/feeds/all.rss?title_include=张三&text_only=true
   ```
 
+- **日期过滤**：支持通过`date=N`参数获取最近N天的文章
+  ```
+  {{ORIGIN_URL}}/feeds/MP_WXS_123.json?date=3                 # 获取最近3天的文章
+  {{ORIGIN_URL}}/feeds/all.rss?date=7&limit=50               # 获取最近7天的最多50条文章
+  {{ORIGIN_URL}}/feeds/MP_WXS_123.atom?date=2&text_only=true # 获取最近2天的纯文本文章
+  ```
+
 - **手动更新**：支持通过`/feeds/:feed`接口触发单个feedid更新
   ```
   {{ORIGIN_URL}}/feeds/MP_WXS_123.rss?update=true

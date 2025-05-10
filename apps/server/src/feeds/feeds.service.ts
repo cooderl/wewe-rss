@@ -279,6 +279,7 @@ export class FeedsService {
     title_include,
     title_exclude,
     text_only,
+    date,
   }: {
     id?: string;
     type: string;
@@ -288,6 +289,7 @@ export class FeedsService {
     title_include?: string;
     title_exclude?: string;
     text_only?: boolean;
+    date?: number;
   }) {
     if (!feedTypes.includes(type as any)) {
       type = 'atom';
@@ -295,6 +297,17 @@ export class FeedsService {
 
     let articles: Article[];
     let feedInfo: FeedInfo;
+    let dateFilter = {};
+    if (date && date > 0) {
+      const now = Math.floor(Date.now() / 1000);
+      const daysAgo = now - date * 24 * 60 * 60; 
+      dateFilter = {
+        publishTime: {
+          gte: daysAgo
+        }
+      };
+    }
+    
     if (id) {
       feedInfo = (await this.prismaService.feed.findFirst({
         where: { id },
@@ -305,13 +318,17 @@ export class FeedsService {
       }
 
       articles = await this.prismaService.article.findMany({
-        where: { mpId: id },
+        where: { 
+          mpId: id,
+          ...dateFilter
+        },
         orderBy: { publishTime: 'desc' },
         take: limit,
         skip: (page - 1) * limit,
       });
     } else {
       articles = await this.prismaService.article.findMany({
+        where: dateFilter,
         orderBy: { publishTime: 'desc' },
         take: limit,
         skip: (page - 1) * limit,
