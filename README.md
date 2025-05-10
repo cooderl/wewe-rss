@@ -26,6 +26,19 @@
   {{ORIGIN_URL}}/feeds/MP_WXS_123.json?limit=30&title_include=张三|李四|王五&title_exclude=张三丰|赵六
   ```
 
+- **纯文本输出**：支持通过`text_only=true`参数获取纯文本内容而非HTML格式
+  ```
+  {{ORIGIN_URL}}/feeds/MP_WXS_123.json?text_only=true
+  {{ORIGIN_URL}}/feeds/all.rss?title_include=张三&text_only=true
+  ```
+
+- **日期过滤**：支持通过`date=N`参数获取最近N天的文章
+  ```
+  {{ORIGIN_URL}}/feeds/MP_WXS_123.json?date=3                 # 获取最近3天的文章
+  {{ORIGIN_URL}}/feeds/all.rss?date=7&limit=50               # 获取最近7天的最多50条文章
+  {{ORIGIN_URL}}/feeds/MP_WXS_123.atom?date=2&text_only=true # 获取最近2天的纯文本文章
+  ```
+
 - **手动更新**：支持通过`/feeds/:feed`接口触发单个feedid更新
   ```
   {{ORIGIN_URL}}/feeds/MP_WXS_123.rss?update=true
