@@ -101,36 +101,52 @@ export class FeedsService {
   }
 
   async cleanHtml(source: string) {
+    console.log('[cleanHtml] source 内容片段:', source.slice(0, 10000)); // 只打印前1000字符，避免日志过大
     const $ = load(source, { decodeEntities: false });
-
-    const dirtyHtml = $.html($('.rich_media_content'));
-
+  
+    // 选取 rich_media_content 节点
+    const richMediaContent = $('.rich_media_content');
+    console.log('[cleanHtml] rich_media_content 节点数量:', richMediaContent.length);
+  
+    const dirtyHtml = $.html(richMediaContent);
+    console.log('[cleanHtml] dirtyHtml 长度:', dirtyHtml.length);
+    // 可选：console.log('[cleanHtml] dirtyHtml 片段:', dirtyHtml.slice(0, 200));
+  
     const html = dirtyHtml
       .replace(/data-src=/g, 'src=')
       .replace(/opacity: 0( !important)?;/g, '')
       .replace(/visibility: hidden;/g, '');
-
+  
     const content =
       '<style> .rich_media_content {overflow: hidden;color: #222;font-size: 17px;word-wrap: break-word;-webkit-hyphens: auto;-ms-hyphens: auto;hyphens: auto;text-align: justify;position: relative;z-index: 0;}.rich_media_content {font-size: 18px;}</style>' +
       html;
-
+  
     const result = minify(content, {
       removeAttributeQuotes: true,
       collapseWhitespace: true,
     });
-
+  
+    console.log('[cleanHtml] minify 后长度:', result.length);
+  
     return result;
   }
 
   async getHtmlByUrl(url: string) {
     const html = await this.request(url, { responseType: 'text' }).text();
+    console.log(`[getHtmlByUrl] 抓取到原始HTML长度: ${html.length}`);
+    // 可选：保存原始HTML到文件
+    // require('fs').writeFileSync('/tmp/raw.html', html);
+  
     if (
       this.configService.get<ConfigurationType['feed']>('feed')!.enableCleanHtml
     ) {
       const result = await this.cleanHtml(html);
+      console.log(`[getHtmlByUrl] cleanHtml后HTML长度: ${result.length}`);
+      // 可选：保存clean后的HTML
+      // require('fs').writeFileSync('/tmp/clean.html', result);
       return result;
     }
-
+  
     return html;
   }
 
